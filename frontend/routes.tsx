@@ -1,17 +1,16 @@
-import HelloWorldView from 'Frontend/views/helloworld/HelloWorldView.js';
+import CustomerServiceView from 'Frontend/views/customerservice/CustomerServiceView';
 import MainLayout from 'Frontend/views/MainLayout.js';
-import { lazy } from 'react';
 import { createBrowserRouter, RouteObject } from 'react-router-dom';
+import BookingsView from "Frontend/views/bookings/AboutView";
 
-const AboutView = lazy(async () => import('Frontend/views/about/AboutView.js'));
 
 export const routes: RouteObject[] = [
   {
     element: <MainLayout />,
     handle: { title: 'Main' },
     children: [
-      { path: '/', element: <HelloWorldView />, handle: { title: 'Hello World' } },
-      { path: '/about', element: <AboutView />, handle: { title: 'About' } },
+      { path: '/', element: <CustomerServiceView />, handle: { title: 'Customer Service' } },
+      { path: '/bookings', element: <BookingsView />, handle: { title: 'Bookings' } },
     ],
   },
 ];
