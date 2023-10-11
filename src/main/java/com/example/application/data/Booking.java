@@ -4,20 +4,19 @@ import java.time.LocalDate;
 
 public class Booking {
 
-    private Long id;
     private String bookingNumber;
     private LocalDate bookingFrom;
     private LocalDate bookingTo;
     private Customer customer;
 
-    public Booking() {
-    }
+    private BookingStatus bookingStatus;
 
-    public Booking(String bookingNumber, LocalDate bookingFrom, LocalDate bookingTo, Customer customer) {
+    public Booking(String bookingNumber, LocalDate bookingFrom, LocalDate bookingTo, Customer customer, BookingStatus bookingStatus) {
         this.bookingNumber = bookingNumber;
         this.bookingFrom = bookingFrom;
         this.bookingTo = bookingTo;
         this.customer = customer;
+        this.bookingStatus = bookingStatus;
     }
 
 
@@ -51,5 +50,13 @@ public class Booking {
 
     public void setCustomer(Customer customer) {
         this.customer = customer;
+    }
+
+    public BookingStatus getBookingStatus() {
+        return bookingStatus;
+    }
+
+    public void setBookingStatus(BookingStatus bookingStatus) {
+        this.bookingStatus = bookingStatus;
     }
 }

@@ -1,16 +1,21 @@
 package com.example.application.client;
 
+import com.example.application.services.CarRentalService;
 import com.example.application.services.CustomerSupportAgent;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
+import java.time.LocalDate;
+import java.util.List;
+
 @BrowserCallable
 @AnonymousAllowed
 public class AssistantService {
 
     private final CustomerSupportAgent agent;
+
 
     public AssistantService(CustomerSupportAgent agent) {
         this.agent = agent;
