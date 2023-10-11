@@ -32,14 +32,8 @@ import java.nio.file.Path;
 
 import static dev.langchain4j.data.document.FileSystemDocumentLoader.loadDocument;
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
+import static dev.langchain4j.model.openai.OpenAiModelName.GPT_4;
 
-/**
- * The entry point of the Spring Boot application.
- *
- * Use the @PWA annotation make the application installable on phones, tablets
- * and some desktop browsers.
- *
- */
 @SpringBootApplication
 @Theme(value = "customer-support-agent")
 public class Application implements AppShellConfigurator {
@@ -51,17 +45,21 @@ public class Application implements AppShellConfigurator {
                                               Retriever<TextSegment> retriever) {
         return AiServices.builder(CustomerSupportAgent.class)
                 .streamingChatLanguageModel(chatLanguageModel)
-                .chatMemory(MessageWindowChatMemory.withMaxMessages(20))
+                .chatMemoryProvider(messageId -> MessageWindowChatMemory
+                        .builder()
+                        .id(messageId)
+                        .maxMessages(20)
+                        .build())
                 .tools(bookingTools)
                 .retriever(retriever)
                 .build();
     }
 
     @Bean
-    StreamingChatLanguageModel chatLanguageModel(@Value("${openai.api.key") String apiKey) {
+    StreamingChatLanguageModel chatLanguageModel(@Value("${openai.api.key}") String apiKey) {
         return OpenAiStreamingChatModel.builder()
                 .apiKey(apiKey)
-                .modelName(GPT_3_5_TURBO)
+                .modelName(GPT_4)
                 .build();
     }
 
@@ -94,7 +92,7 @@ public class Application implements AppShellConfigurator {
         // 4. Convert segments into embeddings
         // 5. Store embeddings into embedding store
         // All this can be done manually, but we will use EmbeddingStoreIngestor to automate this:
-        DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0, new OpenAiTokenizer(GPT_3_5_TURBO));
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0, new OpenAiTokenizer(GPT_4));
         EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
                 .documentSplitter(documentSplitter)
                 .embeddingModel(embeddingModel)

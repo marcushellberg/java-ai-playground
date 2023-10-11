@@ -21,10 +21,10 @@ public class AssistantService {
         this.agent = agent;
     }
 
-    public Flux<String> chat(String question) {
+    public Flux<String> chat(String chatId, String question) {
         Sinks.Many<String> sink = Sinks.many().unicast().onBackpressureBuffer();
 
-        agent.chat(question)
+        agent.chat(chatId, question)
                 .onNext(sink::tryEmitNext)
                 .onComplete(aiMessageResponse -> sink.tryEmitComplete())
                 .onError(sink::tryEmitError)

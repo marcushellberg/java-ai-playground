@@ -25,6 +25,7 @@
     "classnames": "^2.3.2",
     "construct-style-sheets-polyfill": "3.1.0",
     "lit": "2.8.0",
+    "nanoid": "^5.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.4.2"
@@ -74,7 +75,8 @@
     "@hilla/react-form": "$@hilla/react-form",
     "@hilla/react-auth": "$@hilla/react-auth",
     "@hilla/react-grid": "$@hilla/react-grid",
-    "@hilla/generator-typescript-plugin-subtypes": "$@hilla/generator-typescript-plugin-subtypes"
+    "@hilla/generator-typescript-plugin-subtypes": "$@hilla/generator-typescript-plugin-subtypes",
+    "nanoid": "$nanoid"
   },
   "vaadin": {
     "dependencies": {
@@ -117,6 +119,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "aa45bbc1819bdf3f7a1f006800209c48b3d09a8ede5676ac1f5b2f8d50a9a009"
+    "hash": "235fb0be4fc811df8f609ef603c647383964034585d80bbe0bf7d04e7ff34ad7"
   }
 }
