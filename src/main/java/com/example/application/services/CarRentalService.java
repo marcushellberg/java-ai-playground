@@ -54,6 +54,7 @@ public class CarRentalService {
             db.getBookings().add(booking);
         }
 
+        storeManager.storeRoot();
         System.out.println("Demo data initialized");
     }
 

@@ -11,7 +11,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <hilla.version>2.2.2</hilla.version>
+        <hilla.version>2.3.0.alpha10</hilla.version>
         <langchain.version>0.23.0</langchain.version>
         <eclipsestore.version>1.0.0-SNAPSHOT</eclipsestore.version>
     </properties>
@@ -33,7 +33,24 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>vaadin-prereleases</id>
+            <url>https://maven.vaadin.com/vaadin-prereleases</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </repository>
     </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>vaadin-prereleases</id>
+            <url>https://maven.vaadin.com/vaadin-prereleases</url>
+            <snapshots>
+                <enabled>true</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
 
     <dependencyManagement>
         <dependencies>
