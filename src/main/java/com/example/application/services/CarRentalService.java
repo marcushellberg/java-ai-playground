@@ -42,10 +42,10 @@ public class CarRentalService {
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
 
-            LocalDate bookingFrom = LocalDate.now().plusDays(i + 1);
+            LocalDate bookingFrom = LocalDate.now().plusDays(2*i);
             LocalDate bookingTo = bookingFrom.plusDays(random.nextInt(7) + 1);
 
-            Booking booking = new Booking("BK-" + (i + 1), bookingFrom, bookingTo, customer, BookingStatus.CONFIRMED);
+            Booking booking = new Booking("10" + (i + 1), bookingFrom, bookingTo, customer, BookingStatus.CONFIRMED);
             customer.getBookings().add(booking);
 
             db.getCustomers().add(customer);
