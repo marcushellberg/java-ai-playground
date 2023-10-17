@@ -9,6 +9,7 @@ import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -34,21 +35,28 @@ import static dev.langchain4j.data.document.FileSystemDocumentLoader.loadDocumen
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_3_5_TURBO;
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_4;
 
+
+/**
+ * This example is from https://github.com/langchain4j/langchain4j-examples/tree/main/spring-boot-example,
+ * which is licensed under the Apache License 2.0.
+ */
 @SpringBootApplication
 @Theme(value = "customer-support-agent")
 public class Application implements AppShellConfigurator {
 
+    private final String MODEL = GPT_4;
 
     @Bean
     CustomerSupportAgent customerSupportAgent(StreamingChatLanguageModel chatLanguageModel,
                                               BookingTools bookingTools,
                                               Retriever<TextSegment> retriever) {
+        var tokenizer = new OpenAiTokenizer(MODEL);
         return AiServices.builder(CustomerSupportAgent.class)
                 .streamingChatLanguageModel(chatLanguageModel)
-                .chatMemoryProvider(messageId -> MessageWindowChatMemory
+                .chatMemoryProvider(chatId -> TokenWindowChatMemory
                         .builder()
-                        .id(messageId)
-                        .maxMessages(20)
+                        .id(chatId)
+                        .maxTokens(500, tokenizer)
                         .build())
                 .tools(bookingTools)
                 .retriever(retriever)
@@ -59,7 +67,7 @@ public class Application implements AppShellConfigurator {
     StreamingChatLanguageModel chatLanguageModel(@Value("${openai.api.key}") String apiKey) {
         return OpenAiStreamingChatModel.builder()
                 .apiKey(apiKey)
-                .modelName(GPT_4)
+                .modelName(MODEL)
                 .build();
     }
 
@@ -92,7 +100,7 @@ public class Application implements AppShellConfigurator {
         // 4. Convert segments into embeddings
         // 5. Store embeddings into embedding store
         // All this can be done manually, but we will use EmbeddingStoreIngestor to automate this:
-        DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0, new OpenAiTokenizer(GPT_4));
+        DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0, new OpenAiTokenizer(MODEL));
         EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
                 .documentSplitter(documentSplitter)
                 .embeddingModel(embeddingModel)

@@ -11,7 +11,8 @@ public interface CustomerSupportAgent {
             "Before providing information about a booking or cancelling a booking, ",
             "you MUST always get the following information from the user: ",
             "booking number, customer first name and last name.",
-            "Today is {{current_date}}."
+            "Today is {{current_date}}. ",
+            "Before changing a booking, ensure it is permitted by the terms.",
     })
     TokenStream chat(@MemoryId String chatId, @UserMessage String userMessage);
 }
