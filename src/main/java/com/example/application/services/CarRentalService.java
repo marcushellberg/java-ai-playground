@@ -4,6 +4,8 @@ import com.example.application.data.Booking;
 import com.example.application.data.BookingStatus;
 import com.example.application.data.CarRentalData;
 import com.example.application.data.Customer;
+
+import org.eclipse.serializer.reflect.ClassLoaderProvider;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorage;
 import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,13 @@ public class CarRentalService {
 
     public CarRentalService() {
         db = new CarRentalData();
-        storeManager = EmbeddedStorage.start();
-        storeManager.setRoot(db);
+        
+        storeManager = EmbeddedStorage.Foundation()
+            //Ensure that always the same class loader is used.
+            .onConnectionFoundation(cf ->
+                cf.setClassLoaderProvider(ClassLoaderProvider.New(Thread.currentThread().getContextClassLoader()))
+            )
+            .start(db); //Start storage, load data if not empty, set db as root if empty.
 
         initDemoData();
     }
@@ -51,6 +58,10 @@ public class CarRentalService {
             db.getCustomers().add(customer);
             db.getBookings().add(booking);
         }
+
+        //The modified objects are customer and booking lists. Store them.
+        storeManager.store(db.getCustomers());
+        storeManager.store(db.getBookings());
 
         System.out.println("Demo data initialized");
     }
