@@ -93,7 +93,7 @@ public class Application implements AppShellConfigurator {
         var embeddingStore = new InMemoryEmbeddingStore<TextSegment>();
 
         // 2. Load an example document ("Miles of Smiles" terms of use)
-        Resource resource = resourceLoader.getResource("classpath:terms-of-use.txt");
+        Resource resource = resourceLoader.getResource("classpath:terms-of-service.txt");
         var termsOfUse = loadDocument(resource.getFile().toPath());
 
         // 3. Split the document into segments 100 tokens each
