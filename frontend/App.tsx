@@ -19,6 +19,7 @@ export default function App() {
     const [bookings, setBookings] = useState<BookingDetails[]>([]);
 
     useEffect(() => {
+        // Update bookings when we have received the full response
         if (!working) {
             BookingService.getBookings().then(setBookings);
         }

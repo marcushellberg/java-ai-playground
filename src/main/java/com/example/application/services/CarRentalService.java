@@ -11,6 +11,7 @@ import org.eclipse.store.storage.embedded.types.EmbeddedStorageManager;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -34,13 +35,12 @@ public class CarRentalService {
     }
 
     private void initDemoData() {
-        if (!db.getCustomers().isEmpty()) {
-            return;
-        }
-
         List<String> firstNames = List.of("John", "Jane", "Michael", "Sarah", "Robert");
         List<String> lastNames = List.of("Doe", "Smith", "Johnson", "Williams", "Taylor");
         Random random = new Random();
+
+        var customers = new ArrayList<Customer>();
+        var bookings = new ArrayList<Booking>();
 
         for (int i = 0; i < 5; i++) {
             String firstName = firstNames.get(i);
@@ -55,9 +55,13 @@ public class CarRentalService {
             Booking booking = new Booking("10" + (i + 1), bookingFrom, bookingTo, customer, BookingStatus.CONFIRMED);
             customer.getBookings().add(booking);
 
-            db.getCustomers().add(customer);
-            db.getBookings().add(booking);
+            customers.add(customer);
+            bookings.add(booking);
         }
+
+        // Reset the database on each start
+        db.setCustomers(customers);
+        db.setBookings(bookings);
 
         //The modified objects are customer and booking lists. Store them.
         storeManager.store(db.getCustomers());
@@ -87,6 +91,7 @@ public class CarRentalService {
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {
         var booking = findBooking(bookingNumber, firstName, lastName);
         booking.setBookingStatus(BookingStatus.CANCELLED);
+        storeManager.store(booking);
     }
 
     private BookingDetails toBookingDetails(Booking booking){
