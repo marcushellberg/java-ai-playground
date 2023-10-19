@@ -1,6 +1,6 @@
 package com.example.application.client;
 
-import com.example.application.services.CarRentalService;
+
 import com.example.application.services.CustomerSupportAgent;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
