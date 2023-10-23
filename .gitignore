@@ -43,3 +43,6 @@ out/
 # Maven wrapper
 .mvn/
 mvnw
+
+# Eclipse store
+storage/
