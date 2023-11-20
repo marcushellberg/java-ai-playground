@@ -46,7 +46,6 @@ public class Application implements AppShellConfigurator {
         SpringApplication.run(Application.class, args);
     }
 
-
     @Bean
     EmbeddingModel embeddingModel() {
         return new AllMiniLmL6V2EmbeddingModel();
@@ -92,7 +91,7 @@ public class Application implements AppShellConfigurator {
     StreamingChatLanguageModel chatLanguageModel(@Value("${openai.api.key}") String apiKey) {
         return OpenAiStreamingChatModel.builder()
                 .apiKey(apiKey)
-                .modelName(GPT_4)
+                .modelName("gpt-4-1106-preview")
                 .build();
     }
 
