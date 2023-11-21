@@ -23,7 +23,7 @@ public class CarRentalService {
 
     public CarRentalService() {
         db = new CarRentalData();
-        
+
         storeManager = EmbeddedStorage.Foundation()
             //Ensure that always the same class loader is used.
             .onConnectionFoundation(cf ->
@@ -90,6 +90,9 @@ public class CarRentalService {
 
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {
         var booking = findBooking(bookingNumber, firstName, lastName);
+        if (booking.getBookingFrom().isBefore(LocalDate.now().plusDays(7))) {
+            throw new IllegalArgumentException("Booking cannot be cancelled within 7 days of the start date");
+        }
         booking.setBookingStatus(BookingStatus.CANCELLED);
         storeManager.store(booking);
     }
