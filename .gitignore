@@ -40,9 +40,5 @@ out/
 # VS Code
 .vscode/
 
-# Maven wrapper
-.mvn/
-mvnw
-
 # Eclipse store
 storage/
