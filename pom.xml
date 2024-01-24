@@ -13,7 +13,6 @@
         <java.version>17</java.version>
         <hilla.version>2.3.1</hilla.version>
         <langchain.version>0.24.0</langchain.version>
-        <eclipsestore.version>1.0.0-SNAPSHOT</eclipsestore.version>
     </properties>
 
     <parent>
@@ -104,12 +103,6 @@
             <groupId>dev.langchain4j</groupId>
             <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
             <version>${langchain.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.eclipse.store</groupId>
-            <artifactId>storage-embedded</artifactId>
-            <version>${eclipsestore.version}</version>
         </dependency>
 
         <dependency>
