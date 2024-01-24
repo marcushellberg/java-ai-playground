@@ -5,6 +5,7 @@ import com.example.application.services.CustomerSupportAgent;
 import com.vaadin.flow.component.page.AppShellConfigurator;
 import com.vaadin.flow.theme.Theme;
 import dev.langchain4j.data.document.DocumentSplitter;
+import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.document.splitter.DocumentSplitters;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
@@ -30,7 +31,7 @@ import org.springframework.core.io.ResourceLoader;
 
 import java.io.IOException;
 
-import static dev.langchain4j.data.document.FileSystemDocumentLoader.loadDocument;
+import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_4;
 
 
@@ -73,7 +74,7 @@ public class Application implements AppShellConfigurator {
         return args -> {
             Resource resource =
                     resourceLoader.getResource("classpath:terms-of-service.txt");
-            var termsOfUse = loadDocument(resource.getFile().toPath());
+            var termsOfUse = loadDocument(resource.getFile().toPath(), new TextDocumentParser());
 
             DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0,
                     tokenizer);
