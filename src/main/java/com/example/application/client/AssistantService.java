@@ -7,9 +7,6 @@ import dev.hilla.BrowserCallable;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
 
-import java.time.LocalDate;
-import java.util.List;
-
 @BrowserCallable
 @AnonymousAllowed
 public class AssistantService {
@@ -21,10 +18,10 @@ public class AssistantService {
         this.agent = agent;
     }
 
-    public Flux<String> chat(String chatId, String question) {
+    public Flux<String> chat(String chatId, String userMessage) {
         Sinks.Many<String> sink = Sinks.many().unicast().onBackpressureBuffer();
 
-        agent.chat(chatId, question)
+        agent.chat(chatId, userMessage)
                 .onNext(sink::tryEmitNext)
                 .onComplete(aiMessageResponse -> sink.tryEmitComplete())
                 .onError(sink::tryEmitError)

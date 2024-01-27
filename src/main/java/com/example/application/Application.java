@@ -76,7 +76,7 @@ public class Application implements AppShellConfigurator {
                     resourceLoader.getResource("classpath:terms-of-service.txt");
             var termsOfUse = loadDocument(resource.getFile().toPath(), new TextDocumentParser());
 
-            DocumentSplitter documentSplitter = DocumentSplitters.recursive(100, 0,
+            DocumentSplitter documentSplitter = DocumentSplitters.recursive(200, 0,
                     tokenizer);
 
             EmbeddingStoreIngestor ingestor = EmbeddingStoreIngestor.builder()
@@ -122,7 +122,7 @@ public class Application implements AppShellConfigurator {
                 .streamingChatLanguageModel(chatLanguageModel)
                 .chatMemoryProvider(chatId -> TokenWindowChatMemory.builder()
                         .id(chatId)
-                        .maxTokens(500, tokenizer)
+                        .maxTokens(1000, tokenizer)
                         .build())
                 .retriever(retriever)
                 .tools(tools)

@@ -3,7 +3,7 @@ package com.example.application.data;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarRentalData {
+public class BookingData {
 
     private List<Customer> customers = new ArrayList<>();
     private List<Booking> bookings = new ArrayList<>();

@@ -5,18 +5,22 @@ import java.time.LocalDate;
 public class Booking {
 
     private String bookingNumber;
-    private LocalDate bookingFrom;
+    private LocalDate date;
     private LocalDate bookingTo;
     private Customer customer;
-
+    private String from;
+    private String to;
     private BookingStatus bookingStatus;
+    private BookingClass bookingClass;
 
-    public Booking(String bookingNumber, LocalDate bookingFrom, LocalDate bookingTo, Customer customer, BookingStatus bookingStatus) {
+    public Booking(String bookingNumber, LocalDate date, Customer customer, BookingStatus bookingStatus, String from, String to, BookingClass bookingClass) {
         this.bookingNumber = bookingNumber;
-        this.bookingFrom = bookingFrom;
-        this.bookingTo = bookingTo;
+        this.date = date;
         this.customer = customer;
         this.bookingStatus = bookingStatus;
+        this.from = from;
+        this.to = to;
+        this.bookingClass = bookingClass;
     }
 
 
@@ -28,12 +32,12 @@ public class Booking {
         this.bookingNumber = bookingNumber;
     }
 
-    public LocalDate getBookingFrom() {
-        return bookingFrom;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public void setBookingFrom(LocalDate bookingFrom) {
-        this.bookingFrom = bookingFrom;
+    public void setDate(LocalDate date) {
+        this.date = date;
     }
 
     public LocalDate getBookingTo() {
@@ -58,5 +62,29 @@ public class Booking {
 
     public void setBookingStatus(BookingStatus bookingStatus) {
         this.bookingStatus = bookingStatus;
+    }
+
+    public String getFrom() {
+        return from;
+    }
+
+    public void setFrom(String from) {
+        this.from = from;
+    }
+
+    public String getTo() {
+        return to;
+    }
+
+    public void setTo(String to) {
+        this.to = to;
+    }
+
+    public BookingClass getBookingClass() {
+        return bookingClass;
+    }
+
+    public void setBookingClass(BookingClass bookingClass) {
+        this.bookingClass = bookingClass;
     }
 }

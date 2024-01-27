@@ -7,7 +7,9 @@ import java.time.LocalDate;
 public record BookingDetails(String bookingNumber,
                              String firstName,
                              String lastName,
-                             LocalDate bookingFrom,
-                             LocalDate bookingTo,
-                             BookingStatus bookingStatus) {
+                             LocalDate date,
+                             BookingStatus bookingStatus,
+                             String from,
+                             String to,
+                             String bookingClass) {
 }

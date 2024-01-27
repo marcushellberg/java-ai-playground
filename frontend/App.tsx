@@ -13,7 +13,7 @@ export default function App() {
     const [working, setWorking] = useState(false);
     const [messages, setMessages] = useState<MessageListItem[]>([{
         userName: 'Assistant',
-        text: 'Welcome to Miles of Smiles! How can I help you?',
+        text: 'Welcome to Funnair! How can I help you?',
         userColorIndex: 1
     }]);
     const [bookings, setBookings] = useState<BookingDetails[]>([]);
@@ -74,12 +74,14 @@ export default function App() {
             <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
                 <h3>Bookings database</h3>
                 <Grid items={bookings} className="flex-shrink-0">
-                    <GridColumn path="bookingNumber"/>
-                    <GridColumn path="firstName"/>
-                    <GridColumn path="lastName"/>
-                    <GridColumn path="bookingFrom"/>
-                    <GridColumn path="bookingTo"/>
-                    <GridColumn path="bookingStatus"/>
+                    <GridColumn path="bookingNumber" autoWidth/>
+                    <GridColumn path="firstName" autoWidth/>
+                    <GridColumn path="lastName" autoWidth/>
+                    <GridColumn path="date" autoWidth/>
+                    <GridColumn path="from" autoWidth/>
+                    <GridColumn path="to" autoWidth/>
+                    <GridColumn path="bookingStatus" autoWidth/>
+                    <GridColumn path="bookingClass" autoWidth/>
                 </Grid>
             </div>
         </SplitLayout>

@@ -1,9 +1,6 @@
 package com.example.application.services;
 
-import com.example.application.data.Booking;
-import com.example.application.data.BookingStatus;
-import com.example.application.data.CarRentalData;
-import com.example.application.data.Customer;
+import com.example.application.data.*;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -12,12 +9,12 @@ import java.util.List;
 import java.util.Random;
 
 @Service
-public class CarRentalService {
+public class FlightService {
 
-    private final CarRentalData db;
+    private final BookingData db;
 
-    public CarRentalService() {
-        db = new CarRentalData();
+    public FlightService() {
+        db = new BookingData();
 
         initDemoData();
     }
@@ -25,6 +22,7 @@ public class CarRentalService {
     private void initDemoData() {
         List<String> firstNames = List.of("John", "Jane", "Michael", "Sarah", "Robert");
         List<String> lastNames = List.of("Doe", "Smith", "Johnson", "Williams", "Taylor");
+        List<String> airportCodes = List.of("LAX", "SFO", "JFK", "LHR", "CDG", "ARN", "HEL", "TXL", "MUC", "FRA", "MAD", "FUN", "SJC");
         Random random = new Random();
 
         var customers = new ArrayList<Customer>();
@@ -33,14 +31,16 @@ public class CarRentalService {
         for (int i = 0; i < 5; i++) {
             String firstName = firstNames.get(i);
             String lastName = lastNames.get(i);
+            String from = airportCodes.get(random.nextInt(airportCodes.size()));
+            String to = airportCodes.get(random.nextInt(airportCodes.size()));
+            BookingClass bookingClass = BookingClass.values()[random.nextInt(BookingClass.values().length)];
             Customer customer = new Customer();
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
 
-            LocalDate bookingFrom = LocalDate.now().plusDays(2*i);
-            LocalDate bookingTo = bookingFrom.plusDays(random.nextInt(7) + 1);
+            LocalDate date = LocalDate.now().plusDays(2*i);
 
-            Booking booking = new Booking("10" + (i + 1), bookingFrom, bookingTo, customer, BookingStatus.CONFIRMED);
+            Booking booking = new Booking("10" + (i + 1), date, customer, BookingStatus.CONFIRMED, from, to, bookingClass);
             customer.getBookings().add(booking);
 
             customers.add(customer);
@@ -72,10 +72,20 @@ public class CarRentalService {
         return toBookingDetails(booking);
     }
 
+    public void changeBooking(String bookingNumber, String firstName, String lastName, String newDate, String from, String to) {
+        var booking = findBooking(bookingNumber, firstName, lastName);
+        if(booking.getDate().isBefore(LocalDate.now().plusDays(1))){
+            throw new IllegalArgumentException("Booking cannot be changed within 24 hours of the start date.");
+        }
+        booking.setDate(LocalDate.parse(newDate));
+        booking.setFrom(from);
+        booking.setTo(to);
+    }
+
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {
         var booking = findBooking(bookingNumber, firstName, lastName);
-        if (booking.getBookingFrom().isBefore(LocalDate.now().plusDays(7))) {
-            throw new IllegalArgumentException("Booking cannot be cancelled within 7 days of the start date");
+        if (booking.getDate().isBefore(LocalDate.now().plusDays(2))) {
+            throw new IllegalArgumentException("Booking cannot be cancelled within 48 hours of the start date.");
         }
         booking.setBookingStatus(BookingStatus.CANCELLED);
     }
@@ -85,9 +95,11 @@ public class CarRentalService {
                 booking.getBookingNumber(),
                 booking.getCustomer().getFirstName(),
                 booking.getCustomer().getLastName(),
-                booking.getBookingFrom(),
-                booking.getBookingTo(),
-                booking.getBookingStatus()
+                booking.getDate(),
+                booking.getBookingStatus(),
+                booking.getFrom(),
+                booking.getTo(),
+                booking.getBookingClass().toString()
         );
     }
 }
