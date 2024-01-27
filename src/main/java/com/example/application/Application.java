@@ -92,7 +92,7 @@ public class Application implements AppShellConfigurator {
     StreamingChatLanguageModel chatLanguageModel(@Value("${openai.api.key}") String apiKey) {
         return OpenAiStreamingChatModel.builder()
                 .apiKey(apiKey)
-                .modelName("gpt-4-1106-preview")
+                .modelName("gpt-4-0125-preview")
                 .build();
     }
 
