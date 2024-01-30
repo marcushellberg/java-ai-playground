@@ -67,14 +67,14 @@ export default function App() {
     return (
         <SplitLayout className="h-full">
             <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
-                <h3>Customer support</h3>
+                <h3>Funnair Customer support ✈️</h3>
                 <MessageList items={messages} className="flex-grow"/>
                 <MessageInput onSubmit={e => sendMessage(e.detail.value)}/>
             </div>
             <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
                 <h3>Bookings database</h3>
                 <Grid items={bookings} className="flex-shrink-0">
-                    <GridColumn path="bookingNumber" autoWidth/>
+                    <GridColumn path="bookingNumber" autoWidth header="#"/>
                     <GridColumn path="firstName" autoWidth/>
                     <GridColumn path="lastName" autoWidth/>
                     <GridColumn path="date" autoWidth/>
