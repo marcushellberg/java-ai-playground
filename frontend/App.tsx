@@ -67,7 +67,7 @@ export default function App() {
     return (
         <SplitLayout className="h-full">
             <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
-                <h3>Funnair Customer support ✈️</h3>
+                <h3>Funnair customer support ✈️</h3>
                 <MessageList items={messages} className="flex-grow"/>
                 <MessageInput onSubmit={e => sendMessage(e.detail.value)}/>
             </div>
@@ -80,7 +80,9 @@ export default function App() {
                     <GridColumn path="date" autoWidth/>
                     <GridColumn path="from" autoWidth/>
                     <GridColumn path="to" autoWidth/>
-                    <GridColumn path="bookingStatus" autoWidth/>
+                    <GridColumn path="bookingStatus" autoWidth>
+                        {({item}) => item.bookingStatus === "CONFIRMED" ? "✅" : "❌"}
+                    </GridColumn>
                     <GridColumn path="bookingClass" autoWidth/>
                 </Grid>
             </div>
