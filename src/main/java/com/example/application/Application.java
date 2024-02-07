@@ -15,9 +15,9 @@ import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
-import dev.langchain4j.retriever.EmbeddingStoreRetriever;
-import dev.langchain4j.retriever.Retriever;
-import dev.langchain4j.service.*;
+import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
+import dev.langchain4j.service.AiServices;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
@@ -35,10 +35,6 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 import static dev.langchain4j.model.openai.OpenAiModelName.GPT_4;
 
 
-/**
- * This example is from https://github.com/langchain4j/langchain4j-examples/tree/main/spring-boot-example,
- * which is licensed under the Apache License 2.0.
- */
 @SpringBootApplication
 @Theme(value = "customer-support-agent")
 public class Application implements AppShellConfigurator {
@@ -98,15 +94,16 @@ public class Application implements AppShellConfigurator {
 
 
     @Bean
-    Retriever<TextSegment> retriever(
+    ContentRetriever retriever(
             EmbeddingStore<TextSegment> embeddingStore,
             EmbeddingModel embeddingModel
     ) {
-        return EmbeddingStoreRetriever.from(
-                embeddingStore,
-                embeddingModel,
-                1,
-                0.6);
+        return EmbeddingStoreContentRetriever.builder()
+                .embeddingStore(embeddingStore)
+                .embeddingModel(embeddingModel)
+                .maxResults(2)
+                .minScore(0.6)
+                .build();
     }
 
 
@@ -114,7 +111,7 @@ public class Application implements AppShellConfigurator {
     CustomerSupportAgent customerSupportAgent(
             StreamingChatLanguageModel chatLanguageModel,
             Tokenizer tokenizer,
-            Retriever<TextSegment> retriever,
+            ContentRetriever retriever,
             BookingTools tools
     ) {
 
@@ -124,7 +121,7 @@ public class Application implements AppShellConfigurator {
                         .id(chatId)
                         .maxTokens(1000, tokenizer)
                         .build())
-                .retriever(retriever)
+                .contentRetriever(retriever)
                 .tools(tools)
                 .build();
     }
