@@ -13,6 +13,7 @@ import dev.langchain4j.model.Tokenizer;
 import dev.langchain4j.model.chat.StreamingChatLanguageModel;
 import dev.langchain4j.model.embedding.AllMiniLmL6V2EmbeddingModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiStreamingChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
@@ -32,7 +33,6 @@ import org.springframework.core.io.ResourceLoader;
 import java.io.IOException;
 
 import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.loadDocument;
-import static dev.langchain4j.model.openai.OpenAiModelName.GPT_4;
 
 
 @SpringBootApplication
@@ -55,7 +55,7 @@ public class Application implements AppShellConfigurator {
 
     @Bean
     Tokenizer tokenizer() {
-        return new OpenAiTokenizer(GPT_4);
+        return new OpenAiTokenizer(OpenAiChatModelName.GPT_4_TURBO_PREVIEW.toString());
     }
 
 
@@ -88,7 +88,7 @@ public class Application implements AppShellConfigurator {
     StreamingChatLanguageModel chatLanguageModel(@Value("${openai.api.key}") String apiKey) {
         return OpenAiStreamingChatModel.builder()
                 .apiKey(apiKey)
-                .modelName("gpt-4-turbo-preview")
+                .modelName(OpenAiChatModelName.GPT_4_TURBO_PREVIEW)
                 .build();
     }
 

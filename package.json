@@ -28,6 +28,7 @@
     "nanoid": "^5.0.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-markdown": "^9.0.1",
     "react-router-dom": "^6.4.2"
   },
   "devDependencies": {
@@ -76,7 +77,8 @@
     "@hilla/react-auth": "$@hilla/react-auth",
     "@hilla/generator-typescript-plugin-subtypes": "$@hilla/generator-typescript-plugin-subtypes",
     "nanoid": "$nanoid",
-    "@hilla/react-crud": "$@hilla/react-crud"
+    "@hilla/react-crud": "$@hilla/react-crud",
+    "react-markdown": "$react-markdown"
   },
   "vaadin": {
     "dependencies": {
@@ -119,6 +121,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "a5cf46d5be8c7484fea6ee1b8bb1a2cadeacd115677e8adcce55d0f0da761270"
+    "hash": "d1bfae99d90d421676cb6b561bc2f64a3cae123591ed1825224bf13a6bded67b"
   }
 }
