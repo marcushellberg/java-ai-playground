@@ -117,10 +117,10 @@ public class ChatHistory {
 
 		int from = response.size() - lastN;
 		int to = response.size();
-		logger.info("Returning last {} messages from {} to {}", lastN, from, to);
+		logger.debug("Returning last {} messages from {} to {}", lastN, from, to);
 
 		var responseWindow = response.subList(from, to);
-		logger.info("Returning last {} messages: {}", lastN, responseWindow);
+		logger.debug("Returning last {} messages: {}", lastN, responseWindow);
 
 		return responseWindow;
 	}

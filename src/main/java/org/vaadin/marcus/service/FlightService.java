@@ -22,7 +22,7 @@ public class FlightService {
     private void initDemoData() {
         List<String> firstNames = List.of("John", "Jane", "Michael", "Sarah", "Robert");
         List<String> lastNames = List.of("Doe", "Smith", "Johnson", "Williams", "Taylor");
-        List<String> airportCodes = List.of("LAX", "SFO", "JFK", "LHR", "CDG", "ARN", "HEL", "TXL", "MUC", "FRA", "MAD", "FUN", "SJC");
+        List<String> airportCodes = List.of("LAX", "SFO", "JFK", "LHR", "CDG", "ARN", "HEL", "TXL", "MUC", "FRA", "MAD", "SJC");
         Random random = new Random();
 
         var customers = new ArrayList<Customer>();

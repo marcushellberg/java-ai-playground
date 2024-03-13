@@ -53,7 +53,7 @@ public class SpringAiAssistant {
         Message systemMessage = getSystemMessage(similarDocuments,
                 this.chatHistory.getLastN(chatId, CHAT_HISTORY_WINDOW_SIZE));
 
-        logger.info("System Message: {}", systemMessage.getContent());
+        logger.debug("System Message: {}", systemMessage.getContent());
 
         UserMessage userMessage = new UserMessage(userMessageContent);
 
