@@ -1,4 +1,4 @@
-package com.example.application.services;
+package com.example.application.service;
 
 import com.example.application.data.*;
 import org.springframework.stereotype.Service;

@@ -1,4 +1,4 @@
-package com.example.application.services;
+package com.example.application.langchain4j;
 
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;

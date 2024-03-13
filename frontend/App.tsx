@@ -1,5 +1,5 @@
 import {useEffect, useRef, useState} from "react";
-import BookingDetails from "Frontend/generated/com/example/application/services/BookingDetails";
+import BookingDetails from "Frontend/generated/com/example/application/service/BookingDetails";
 import {AssistantService, BookingService} from "Frontend/generated/endpoints";
 import {GridColumn} from "@hilla/react-components/GridColumn";
 import {Grid} from "@hilla/react-components/Grid";
@@ -12,12 +12,11 @@ import Message, {MessageItem} from "Frontend/Message";
 const chatId = nanoid();
 export default function App() {
   const [working, setWorking] = useState(false);
+  const [bookings, setBookings] = useState<BookingDetails[]>([]);
   const [messages, setMessages] = useState<MessageItem[]>([{
     role: 'assistant',
     content: 'Welcome to Funnair! How can I help you?'
   }]);
-  const latestMessageRef = useRef<HTMLDivElement>(null);
-  const [bookings, setBookings] = useState<BookingDetails[]>([]);
 
   useEffect(() => {
     // Update bookings when we have received the full response
@@ -25,7 +24,6 @@ export default function App() {
       BookingService.getBookings().then(setBookings);
     }
   }, [working]);
-
 
   function addMessage(message: MessageItem) {
     setMessages(messages => [...messages, message]);
@@ -66,7 +64,7 @@ export default function App() {
   return (
     <SplitLayout className="h-full">
       <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
-        <h3>Funnair customer support ✈️</h3>
+        <h3>Funnair customer support</h3>
         <div className="flex-grow overflow-scroll">
           {messages.map((message, index) => (
             <Message
@@ -86,7 +84,7 @@ export default function App() {
           <GridColumn path="date" autoWidth/>
           <GridColumn path="from" autoWidth/>
           <GridColumn path="to" autoWidth/>
-          <GridColumn path="bookingStatus" autoWidth>
+          <GridColumn path="bookingStatus" autoWidth header="Status">
             {({item}) => item.bookingStatus === "CONFIRMED" ? "✅" : "❌"}
           </GridColumn>
           <GridColumn path="bookingClass" autoWidth/>

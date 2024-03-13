@@ -1,5 +1,7 @@
-package com.example.application.services;
+package com.example.application.langchain4j;
 
+import com.example.application.service.BookingDetails;
+import com.example.application.service.FlightService;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Component;
 

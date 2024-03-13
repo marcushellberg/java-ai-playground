@@ -1,7 +1,7 @@
 package com.example.application.client;
 
 
-import com.example.application.services.CustomerSupportAgent;
+import com.example.application.langchain4j.CustomerSupportAgent;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
 import reactor.core.publisher.Flux;
