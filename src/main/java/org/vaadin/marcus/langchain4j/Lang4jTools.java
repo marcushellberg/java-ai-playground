@@ -6,27 +6,27 @@ import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BookingTools {
+public class Lang4jTools {
 
-    private final FlightService carRentalService;
+    private final FlightService service;
 
-    public BookingTools(FlightService carRentalService) {
-        this.carRentalService = carRentalService;
+    public Lang4jTools(FlightService service) {
+        this.service = service;
     }
 
     @Tool
     public BookingDetails getBookingDetails(String bookingNumber, String firstName, String lastName) {
-        return carRentalService.getBookingDetails(bookingNumber, firstName, lastName);
+        return service.getBookingDetails(bookingNumber, firstName, lastName);
     }
 
     @Tool
     public void changeBooking(String bookingNumber, String firstName, String lastName, String date, String from, String to) {
-        carRentalService.changeBooking(bookingNumber, firstName, lastName, date, from, to);
+        service.changeBooking(bookingNumber, firstName, lastName, date, from, to);
     }
 
     @Tool
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {
-        carRentalService.cancelBooking(bookingNumber, firstName, lastName);
+        service.cancelBooking(bookingNumber, firstName, lastName);
     }
 
 }

@@ -1,13 +1,15 @@
-# AI powered expert system demo
+# Java AI library comparison app
 
-This app shows how you can use LangChain4j to build an AI-powered system that:
+This app is an AI-powered customer support application that:
 
 - Has access to terms and conditions (retrieval augmented generation, RAG)
 - Can access tools (Java methods) to perform actions
 - Uses an LLM to interact with the user
 
-All credit for the example goes to [LangChain4j](https://github.com/langchain4j/langchain4j-examples/tree/main/spring-boot-example), 
-this demo simply expands on it by adding a React UI and a database.
+The application includes implementations for: 
+
+- [LangChain4j](https://github.com/langchain4j/langchain4j) in the `langchain4j` package
+- [Spring AI](https://spring.io/projects/spring-ai/) in the `springai` package (thanks to [@tzolov](https://github.com/tzolov)!)
 
 ## Requirements
 - Java 17+
