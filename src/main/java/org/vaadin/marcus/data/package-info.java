@@ -1,4 +1,4 @@
 @NonNullApi
-package com.example.application.client;
+package org.vaadin.marcus.data;
 
 import org.springframework.lang.NonNullApi;

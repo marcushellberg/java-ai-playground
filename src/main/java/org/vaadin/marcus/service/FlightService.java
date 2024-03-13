@@ -1,7 +1,7 @@
-package com.example.application.service;
+package org.vaadin.marcus.service;
 
-import com.example.application.data.*;
 import org.springframework.stereotype.Service;
+import org.vaadin.marcus.data.*;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

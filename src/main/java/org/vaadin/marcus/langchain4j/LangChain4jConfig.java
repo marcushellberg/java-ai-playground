@@ -1,4 +1,4 @@
-package com.example.application.langchain4j;
+package org.vaadin.marcus.langchain4j;
 
 import dev.langchain4j.data.document.DocumentSplitter;
 import dev.langchain4j.data.document.parser.TextDocumentParser;
@@ -32,7 +32,7 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 @Configuration
 public class LangChain4jConfig {
 
-    private static String MODEL_NAME = OpenAiChatModelName.GPT_3_5_TURBO.toString();
+    private static final String MODEL_NAME = OpenAiChatModelName.GPT_3_5_TURBO.toString();
 
     @Bean
     EmbeddingModel embeddingModel() {

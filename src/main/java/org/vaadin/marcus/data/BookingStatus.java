@@ -1,4 +1,4 @@
-package com.example.application.data;
+package org.vaadin.marcus.data;
 
 public enum BookingStatus {
     CONFIRMED, COMPLETED, CANCELLED

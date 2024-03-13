@@ -1,6 +1,6 @@
-package com.example.application.service;
+package org.vaadin.marcus.service;
 
-import com.example.application.data.BookingStatus;
+import org.vaadin.marcus.data.BookingStatus;
 
 import java.time.LocalDate;
 

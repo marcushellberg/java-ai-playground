@@ -1,6 +1,6 @@
-import {useEffect, useRef, useState} from "react";
-import BookingDetails from "Frontend/generated/com/example/application/service/BookingDetails";
+import {useEffect, useState} from "react";
 import {AssistantService, BookingService} from "Frontend/generated/endpoints";
+import BookingDetails from "Frontend/generated/org/vaadin/marcus/service/BookingDetails";
 import {GridColumn} from "@hilla/react-components/GridColumn";
 import {Grid} from "@hilla/react-components/Grid";
 import {MessageInput} from "@hilla/react-components/MessageInput";
@@ -73,7 +73,7 @@ export default function App() {
             />
           ))}
         </div>
-        <MessageInput onSubmit={e => sendMessage(e.detail.value)}/>
+        <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0"/>
       </div>
       <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
         <h3>Bookings database</h3>

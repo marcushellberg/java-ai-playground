@@ -3,15 +3,15 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <!-- Project from https://start.vaadin.com/project/26884b85-fbd8-445f-9c74-a8f7bef0a197 -->
-    <groupId>com.example.application</groupId>
-    <artifactId>customer-support-agent</artifactId>
-    <name>customer-support-agent</name>
+    <groupId>org.vaadin.marcus</groupId>
+    <artifactId>java-ai-playground</artifactId>
+    <name>java-ai-playground</name>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <properties>
         <java.version>17</java.version>
-        <hilla.version>2.3.1</hilla.version>
+        <hilla.version>2.5.6</hilla.version>
         <langchain.version>0.28.0</langchain.version>
     </properties>
 

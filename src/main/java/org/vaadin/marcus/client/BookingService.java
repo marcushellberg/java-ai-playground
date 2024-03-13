@@ -1,7 +1,7 @@
-package com.example.application.client;
+package org.vaadin.marcus.client;
 
-import com.example.application.service.BookingDetails;
-import com.example.application.service.FlightService;
+import org.vaadin.marcus.service.BookingDetails;
+import org.vaadin.marcus.service.FlightService;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
 import dev.hilla.BrowserCallable;
 

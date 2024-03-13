@@ -1,7 +1,7 @@
-package com.example.application.langchain4j;
+package org.vaadin.marcus.langchain4j;
 
-import com.example.application.service.BookingDetails;
-import com.example.application.service.FlightService;
+import org.vaadin.marcus.service.BookingDetails;
+import org.vaadin.marcus.service.FlightService;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Component;
 

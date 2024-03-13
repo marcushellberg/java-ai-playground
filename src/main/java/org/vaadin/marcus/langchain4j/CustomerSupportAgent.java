@@ -1,4 +1,4 @@
-package com.example.application.langchain4j;
+package org.vaadin.marcus.langchain4j;
 
 import dev.langchain4j.service.MemoryId;
 import dev.langchain4j.service.SystemMessage;
