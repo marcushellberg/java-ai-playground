@@ -52,7 +52,7 @@ public class LangChain4jConfig {
 
     // In the real world, ingesting documents would often happen separately, on a CI server or similar
     @Bean
-    CommandLineRunner docsToEmbeddings(
+    CommandLineRunner ingestDocsForLangChain(
             EmbeddingModel embeddingModel,
             EmbeddingStore<TextSegment> embeddingStore,
             Tokenizer tokenizer,
@@ -99,14 +99,14 @@ public class LangChain4jConfig {
 
 
     @Bean
-    CustomerSupportAgent customerSupportAgent(
+    LangChain4jAssistant customerSupportAgent(
             StreamingChatLanguageModel chatLanguageModel,
             Tokenizer tokenizer,
             ContentRetriever retriever,
-            BookingTools tools
+            Lang4jTools tools
     ) {
 
-        return AiServices.builder(CustomerSupportAgent.class)
+        return AiServices.builder(LangChain4jAssistant.class)
                 .streamingChatLanguageModel(chatLanguageModel)
                 .chatMemoryProvider(chatId -> TokenWindowChatMemory.builder()
                         .id(chatId)

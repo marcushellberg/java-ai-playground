@@ -5,10 +5,10 @@ import dev.langchain4j.service.SystemMessage;
 import dev.langchain4j.service.TokenStream;
 import dev.langchain4j.service.UserMessage;
 
-public interface CustomerSupportAgent {
+public interface LangChain4jAssistant {
 
     @SystemMessage("""
-           You are a customer chat support agent of an airline named "Funnair".",
+           You are a customer chat support agent of an airline named "Funnair",
            Respond in a friendly, helpful, and joyful manner.
            Before providing information about a booking or cancelling a booking,
            you MUST always get the following information from the user:
