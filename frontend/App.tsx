@@ -7,10 +7,14 @@ import {MessageInput} from "@hilla/react-components/MessageInput";
 import {nanoid} from "nanoid";
 import {SplitLayout} from "@hilla/react-components/SplitLayout";
 import Message, {MessageItem} from "Frontend/Message";
+import {Select} from "@hilla/react-components/Select";
+import {ComboBox} from "@hilla/react-components/ComboBox";
 
+const supportedLibraries = ['LangChain4j', 'Spring AI'];
 
-const chatId = nanoid();
 export default function App() {
+  const [chatId, setChatId] = useState(nanoid());
+  const [library, setLibrary] = useState(supportedLibraries[0]);
   const [working, setWorking] = useState(false);
   const [bookings, setBookings] = useState<BookingDetails[]>([]);
   const [messages, setMessages] = useState<MessageItem[]>([{
@@ -44,7 +48,7 @@ export default function App() {
       content: message
     });
     let first = true;
-    AssistantService.chat(chatId, message)
+    AssistantService.chat(chatId, message, library)
       .onNext(chunk => {
         if (first && chunk) {
           addMessage({
@@ -61,10 +65,27 @@ export default function App() {
       .onComplete(() => setWorking(false));
   }
 
+  function changeLibrary(library: string) {
+    setLibrary(library);
+    setChatId(nanoid());
+    setMessages([{
+      role: 'assistant',
+      content: 'Welcome to Funnair! How can I help you?'
+    }]);
+  }
+
   return (
     <SplitLayout className="h-full">
       <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
-        <h3>Funnair customer support</h3>
+        <div className="flex gap-s items-baseline">
+          <h3 className="flex-grow">Funnair support</h3>
+          <ComboBox
+            items={supportedLibraries}
+            style={{width: "140px"}}
+            value={library}
+            onChange={e => changeLibrary(e.target.value)}
+          />
+        </div>
         <div className="flex-grow overflow-scroll">
           {messages.map((message, index) => (
             <Message

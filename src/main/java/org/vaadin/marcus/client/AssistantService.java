@@ -22,10 +22,12 @@ public class AssistantService {
     }
 
     public Flux<String> chat(String chatId, String userMessage, String library) {
-        if("langchain4j".equals(library)) {
+        if("LangChain4j".equals(library)) {
             return callLangChain4j(chatId, userMessage);
-        } else {
+        } else if("Spring AI".equals(library)) {
             return springAiAssistant.chat(chatId, userMessage);
+        } else {
+            throw new IllegalArgumentException("Unknown library: " + library);
         }
     }
 
