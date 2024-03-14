@@ -32,7 +32,7 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 @Configuration
 public class LangChain4jConfig {
 
-    private static final String MODEL_NAME = OpenAiChatModelName.GPT_3_5_TURBO.toString();
+    private static final String MODEL_NAME = OpenAiChatModelName.GPT_4_TURBO_PREVIEW.toString();
 
     @Bean
     EmbeddingModel embeddingModel() {
