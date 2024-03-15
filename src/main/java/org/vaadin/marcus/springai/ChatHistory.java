@@ -14,6 +14,12 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
+/**
+ * Simple, in memory, message chat history.
+ *
+ * @author Christian Tzolov
+ * @author Marcus Hellberg (small fixes)
+ */
 @Service
 public class ChatHistory {
 
