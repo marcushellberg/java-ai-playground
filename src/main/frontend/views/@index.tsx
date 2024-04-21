@@ -1,18 +1,17 @@
 import {useEffect, useState} from "react";
 import {AssistantService, BookingService} from "Frontend/generated/endpoints";
-import BookingDetails from "Frontend/generated/org/vaadin/marcus/service/BookingDetails";
-import {GridColumn} from "@hilla/react-components/GridColumn";
-import {Grid} from "@hilla/react-components/Grid";
-import {MessageInput} from "@hilla/react-components/MessageInput";
+import BookingDetails from "../generated/org/vaadin/marcus/service/BookingDetails";
+import {GridColumn} from "@vaadin/react-components/GridColumn";
+import {Grid} from "@vaadin/react-components/Grid";
+import {MessageInput} from "@vaadin/react-components/MessageInput";
 import {nanoid} from "nanoid";
-import {SplitLayout} from "@hilla/react-components/SplitLayout";
-import Message, {MessageItem} from "Frontend/Message";
-import {Select} from "@hilla/react-components/Select";
-import {ComboBox} from "@hilla/react-components/ComboBox";
+import {SplitLayout} from "@vaadin/react-components/SplitLayout";
+import Message, {MessageItem} from "../components/Message";
+import {ComboBox} from "@vaadin/react-components/ComboBox";
 
 const supportedLibraries = ['LangChain4j', 'Spring AI'];
 
-export default function App() {
+export default function Index() {
   const [chatId, setChatId] = useState(nanoid());
   const [library, setLibrary] = useState(supportedLibraries[0]);
   const [working, setWorking] = useState(false);

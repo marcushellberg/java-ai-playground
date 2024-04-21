@@ -3,7 +3,7 @@ package org.vaadin.marcus.client;
 
 import org.vaadin.marcus.langchain4j.LangChain4jAssistant;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import dev.hilla.BrowserCallable;
+import com.vaadin.hilla.BrowserCallable;
 import org.vaadin.marcus.springai.SpringAiAssistant;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Sinks;
