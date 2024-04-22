@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <!-- Project from https://start.vaadin.com/project/26884b85-fbd8-445f-9c74-a8f7bef0a197 -->
+    <!-- Project from https://github.com/marcushellberg/java-ai-playground -->
     <groupId>org.vaadin.marcus</groupId>
     <artifactId>java-ai-playground</artifactId>
     <name>java-ai-playground</name>
