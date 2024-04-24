@@ -7,13 +7,9 @@ import {MessageInput} from "@vaadin/react-components/MessageInput";
 import {nanoid} from "nanoid";
 import {SplitLayout} from "@vaadin/react-components/SplitLayout";
 import Message, {MessageItem} from "../components/Message";
-import {ComboBox} from "@vaadin/react-components/ComboBox";
-
-const supportedLibraries = ['LangChain4j', 'Spring AI'];
 
 export default function Index() {
   const [chatId, setChatId] = useState(nanoid());
-  const [library, setLibrary] = useState(supportedLibraries[0]);
   const [working, setWorking] = useState(false);
   const [bookings, setBookings] = useState<BookingDetails[]>([]);
   const [messages, setMessages] = useState<MessageItem[]>([{
@@ -47,44 +43,28 @@ export default function Index() {
       content: message
     });
     let first = true;
-    AssistantService.chat(chatId, message, library)
-      .onNext(chunk => {
-        if (first && chunk) {
+    AssistantService.chat(chatId, message)
+      .onNext(token => {
+        if (first && token) {
           addMessage({
             role: 'assistant',
-            content: chunk
+            content: token
           });
 
           first = false;
         } else {
-          appendToLatestMessage(chunk);
+          appendToLatestMessage(token);
         }
       })
       .onError(() => setWorking(false))
       .onComplete(() => setWorking(false));
   }
 
-  function changeLibrary(library: string) {
-    setLibrary(library);
-    setChatId(nanoid());
-    setMessages([{
-      role: 'assistant',
-      content: 'Welcome to Funnair! How can I help you?'
-    }]);
-  }
 
   return (
     <SplitLayout className="h-full">
       <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
-        <div className="flex gap-s items-baseline">
-          <h3 className="flex-grow">Funnair support</h3>
-          <ComboBox
-            items={supportedLibraries}
-            style={{width: "140px"}}
-            value={library}
-            onChange={e => changeLibrary(e.target.value)}
-          />
-        </div>
+        <h3>Funnair support</h3>
         <div className="flex-grow overflow-scroll">
           {messages.map((message, index) => (
             <Message
