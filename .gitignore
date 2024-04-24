@@ -42,3 +42,5 @@ out/
 
 # Eclipse store
 storage/
+
+src/main/frontend/generated/
