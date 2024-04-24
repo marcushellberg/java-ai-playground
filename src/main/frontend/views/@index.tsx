@@ -66,7 +66,7 @@ export default function Index() {
       <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
         <h3>Funnair support</h3>
         <MessageList messages={messages} className="flex-grow overflow-scroll"/>
-        <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0"/>
+        <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0" disabled={working}/>
       </div>
       <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
         <h3>Bookings database</h3>
