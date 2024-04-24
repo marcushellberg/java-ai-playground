@@ -44,16 +44,16 @@ export default function Index() {
     });
     let first = true;
     AssistantService.chat(chatId, message)
-      .onNext(chunk => {
-        if (first && chunk) {
+      .onNext(token => {
+        if (first && token) {
           addMessage({
             role: 'assistant',
-            content: chunk
+            content: token
           });
 
           first = false;
         } else {
-          appendToLatestMessage(chunk);
+          appendToLatestMessage(token);
         }
       })
       .onError(() => setWorking(false))

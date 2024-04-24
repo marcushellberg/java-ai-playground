@@ -12,7 +12,6 @@
     <properties>
         <java.version>17</java.version>
         <vaadin.version>24.4.0.alpha23</vaadin.version>
-        <langchain.version>0.30.0</langchain.version>
         <spring-ai.version>0.8.1</spring-ai.version>
     </properties>
 
@@ -105,23 +104,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-devtools</artifactId>
             <optional>true</optional>
-        </dependency>
-
-        <!-- LangChain4j dependencies -->
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-spring-boot-starter</artifactId>
-            <version>${langchain.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
-            <version>${langchain.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
-            <version>${langchain.version}</version>
         </dependency>
 
         <dependency>
