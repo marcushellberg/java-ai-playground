@@ -13,7 +13,6 @@
         <java.version>17</java.version>
         <vaadin.version>24.4.0.alpha23</vaadin.version>
         <langchain.version>0.30.0</langchain.version>
-        <spring-ai.version>0.8.1</spring-ai.version>
     </properties>
 
     <parent>
