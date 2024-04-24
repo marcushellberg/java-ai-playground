@@ -10,8 +10,8 @@ This app is an AI-powered customer support application that:
 
 The application includes implementations for: 
 
-- [LangChain4j](https://github.com/langchain4j/langchain4j) in the `langchain4j` package
-- [Spring AI](https://spring.io/projects/spring-ai/) in the `springai` package (thanks to [@tzolov](https://github.com/tzolov)!)
+- [LangChain4j](https://github.com/langchain4j/langchain4j) in the `main` branch
+- [Spring AI](https://spring.io/projects/spring-ai/) in the `spring-ai` branch (thanks to [@tzolov](https://github.com/tzolov)!)
 
 The UI is built using [Vaadin Hilla](https://vaadin.com) and the backend is built using Spring Boot.
 
