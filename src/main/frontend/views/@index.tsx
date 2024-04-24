@@ -7,6 +7,7 @@ import {MessageInput} from "@vaadin/react-components/MessageInput";
 import {nanoid} from "nanoid";
 import {SplitLayout} from "@vaadin/react-components/SplitLayout";
 import Message, {MessageItem} from "../components/Message";
+import MessageList from "Frontend/components/MessageList";
 
 export default function Index() {
   const [chatId, setChatId] = useState(nanoid());
@@ -64,14 +65,7 @@ export default function Index() {
     <SplitLayout className="h-full">
       <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
         <h3>Funnair support</h3>
-        <div className="flex-grow overflow-scroll">
-          {messages.map((message, index) => (
-            <Message
-              key={index}
-              message={message}
-            />
-          ))}
-        </div>
+        <MessageList messages={messages} className="flex-grow overflow-scroll"/>
         <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0"/>
       </div>
       <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
