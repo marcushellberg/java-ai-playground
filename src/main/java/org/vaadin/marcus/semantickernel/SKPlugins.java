@@ -18,6 +18,14 @@ public class SKPlugins {
     public SKPlugins(FlightService service) {
         this.service = service;
     }
+
+    /**
+     * Ideally this information should come from a vector db or a knowledge mine,
+     * But SK doesn't have a In_memory option so temporarily implemented as below
+     *
+     * @param query
+     * @return
+     */
     @DefineKernelFunction(
             name = "SearchFromQuestion",
             description = "find information related flight change, update, cancellation policies",
