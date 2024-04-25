@@ -18,6 +18,8 @@ The UI is built using [Vaadin Hilla](https://vaadin.com) and the backend is buil
 ## Requirements
 - Java 17+
 - OpenAI API key in `OPENAI_API_KEY` environment variable
+- For Semantic Kernel & Azure OpenAI instance set also `AZURE_OPENAI_ENDPOINT` environment variable
+- For Semantic Kernel set also `OPENAI_MODEL_NAME` environment variable (this is deployment name for Azure instance and model name in case of OpenAI instance)
 
 ## Running
 Run the app by running `Application.java` in your IDE or `mvn` in the command line.
