@@ -1,19 +1,11 @@
 package org.vaadin.marcus.semantickernel;
 
-import com.azure.ai.openai.models.ChatRequestAssistantMessage;
-import com.azure.ai.openai.models.ChatRequestMessage;
-import com.azure.ai.openai.models.ChatRequestSystemMessage;
-import com.azure.ai.openai.models.ChatRequestUserMessage;
-import com.microsoft.semantickernel.services.chatcompletion.AuthorRole;
 import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
-import org.springframework.util.StringUtils;
-
-import java.util.List;
 
 public class SKChatManager {
 
     private String chatId;
-    private ChatHistory chatHistory;
+    private final ChatHistory chatHistory;
 
     public SKChatManager(String chatId) {
         this.chatId = chatId;
@@ -41,30 +33,4 @@ public class SKChatManager {
         return chatHistory;
     }
 
-    public void setChatHistory(ChatHistory chatHistory) {
-        this.chatHistory = chatHistory;
-    }
-
-
-    private static final String IM_START_USER = "<|im_start|>user";
-    private static final String IM_START_ASSISTANT = "<|im_start|>assistant";
-    private static final String IM_START_SYSTEM = "<|im_start|>system";
-
-    public String formatAsChatML() {
-        StringBuilder sb = new StringBuilder();
-        this.chatHistory.getMessages().forEach(message -> {
-            if (message.getAuthorRole() == AuthorRole.USER) {
-                sb.append(IM_START_USER).append("\n");
-            } else if (message.getAuthorRole() == AuthorRole.SYSTEM) {
-                sb.append(IM_START_SYSTEM).append("\n");
-            } else if (message.getAuthorRole() == AuthorRole.ASSISTANT) {
-                sb.append(IM_START_ASSISTANT).append("\n");
-            }
-
-            if (StringUtils.hasLength(message.getContent())) {
-                sb.append(message.getContent()).append("\n").append("|im_end|").append("\n");
-            }
-        });
-        return sb.toString();
-    }
 }
