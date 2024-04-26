@@ -74,13 +74,20 @@ public class SKPlugins {
                     name = "lastName")
             String lastName) {
         log.debug("invoked getbooking details for {}, {}, {}", bookingNumber, firstName, lastName);
-        return service.getBookingDetails(bookingNumber, firstName, lastName).toString();
+        try {
+            return service.getBookingDetails(bookingNumber, firstName, lastName).toString();
+        } catch (Exception e) {
+            log.error("Exception in getting booking", e);
+            return "Problem getting flight :" + e.getLocalizedMessage();
+        }
+
     }
 
     @DefineKernelFunction(
             name = "changeBooking",
-            description = "update or change booking details based on bookingNumber, firstName and lastName, date, from and to")
-    public void changeBooking(
+            description = "update or change booking details based on bookingNumber, firstName and lastName, date, from and to",
+            returnType = "string")
+    public String changeBooking(
           @KernelFunctionParameter(
             description = "booking number of the flight",
             name = "bookingNumber")
@@ -106,13 +113,22 @@ public class SKPlugins {
             name = "to")
             String to) {
         log.debug("invoked change booking details for {}, {}, {}, {}, {}", bookingNumber, firstName, lastName, from, to);
-        service.changeBooking(bookingNumber, firstName, lastName, date, from, to);
+
+        try {
+            service.changeBooking(bookingNumber, firstName, lastName, date, from, to);
+        } catch (Exception e) {
+            log.error("Exception in update booking", e);
+            return "Problem updating the flight :" + e.getLocalizedMessage();
+        }
+
+        return "FLight updated successfully";
     }
 
     @DefineKernelFunction(
             name = "cancelBooking",
-            description = "cancel booking details based on bookingNumber, firstName and lastName")
-    public void cancelBooking(
+            description = "cancel booking details based on bookingNumber, firstName and lastName",
+            returnType = "string")
+    public String cancelBooking(
             @KernelFunctionParameter(
                     description = "booking number of the flight",
                     name = "bookingNumber")
@@ -126,7 +142,14 @@ public class SKPlugins {
                     name = "lastName")
             String lastName) {
         log.debug("invoked cancel booking details for {}, {}, {}", bookingNumber, firstName, lastName);
-        service.cancelBooking(bookingNumber, firstName, lastName);
+        try {
+            service.cancelBooking(bookingNumber, firstName, lastName);
+        } catch (Exception e) {
+            log.error("Exception in cancel booking", e);
+            return "Problem cancelling the flight :" + e.getLocalizedMessage();
+        }
+
+        return "FLight cancelled successfully";
     }
 
 }
