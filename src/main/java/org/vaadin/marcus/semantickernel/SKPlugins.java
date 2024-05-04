@@ -5,8 +5,8 @@ import com.microsoft.semantickernel.semanticfunctions.annotations.KernelFunction
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.vaadin.marcus.service.BookingDetails;
 import org.vaadin.marcus.service.FlightService;
-import reactor.core.publisher.Mono;
 
 @Component
 public class SKPlugins {
@@ -30,13 +30,13 @@ public class SKPlugins {
             name = "SearchFromQuestion",
             description = "find information related flight change, update, cancellation policies",
             returnType = "string")
-    public Mono<String> searchInAnIndex(
+    public String searchInAnIndex(
             @KernelFunctionParameter(
                     description = "the query to answer",
                     name = "query")
             String query) {
         log.debug("invoked search for policies for query {}", query);
-        return Mono.just("""
+        return """
                 These Terms of Service govern your experience with Funnair. By booking a flight, you agree to these terms.
                                 
                 1. Booking Flights
@@ -53,14 +53,14 @@ public class SKPlugins {
                 - Cancel up to 48 hours before flight.
                 - Cancellation fees: $75 for Economy, $50 for Premium Economy, $25 for Business Class.
                 - Refunds processed within 7 business days.                
-                """);
+                """;
     }
 
     @DefineKernelFunction(
             name = "getBookingDetails",
             description = "find booking details based on bookingNumber, firstName and lastName",
-            returnType = "string")
-    public String getBookingDetails(
+            returnType = "org.vaadin.marcus.service.BookingDetails")
+    public BookingDetails getBookingDetails(
             @KernelFunctionParameter(
                     description = "booking number of the flight",
                     name = "bookingNumber")
@@ -75,12 +75,11 @@ public class SKPlugins {
             String lastName) {
         log.debug("invoked getbooking details for {}, {}, {}", bookingNumber, firstName, lastName);
         try {
-            return service.getBookingDetails(bookingNumber, firstName, lastName).toString();
-        } catch (Exception e) {
-            log.error("Exception in getting booking", e);
-            return "Problem getting flight :" + e.getLocalizedMessage();
+            return service.getBookingDetails(bookingNumber, firstName, lastName);
+        } catch (IllegalArgumentException e) {
+            log.error("error in getting booking detials", e);
+            return new BookingDetails("", "", "", null, null, "", "", "");
         }
-
     }
 
     @DefineKernelFunction(
@@ -121,7 +120,7 @@ public class SKPlugins {
             return "Problem updating the flight :" + e.getLocalizedMessage();
         }
 
-        return "FLight updated successfully";
+        return "Flight updated successfully";
     }
 
     @DefineKernelFunction(
@@ -149,7 +148,7 @@ public class SKPlugins {
             return "Problem cancelling the flight :" + e.getLocalizedMessage();
         }
 
-        return "FLight cancelled successfully";
+        return "Flight cancelled successfully";
     }
 
 }

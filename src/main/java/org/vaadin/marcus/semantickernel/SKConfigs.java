@@ -4,8 +4,10 @@ import com.azure.ai.openai.OpenAIAsyncClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.KeyCredential;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
+import com.microsoft.semantickernel.contextvariables.ContextVariableTypeConverter;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
 import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
 import com.microsoft.semantickernel.plugin.KernelPlugin;
@@ -15,6 +17,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
+import org.vaadin.marcus.service.BookingDetails;
 
 @Configuration
 public class SKConfigs {
@@ -55,10 +58,41 @@ public class SKConfigs {
                 .withPlugin(kernelPlugin)
                 .build();
     }
-    @Bean
-    public InvocationContext invocationContext() {
-        return InvocationContext.builder()
-                .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true)).build();
-    }
 
+    @Bean
+    public ContextVariableTypeConverter<BookingDetails> bookingDetailsTypeConverter(ObjectMapper objectMapper) {
+        return new ContextVariableTypeConverter<>(
+                BookingDetails.class,
+                objectToObject -> (BookingDetails) objectToObject,
+                Record::toString,
+                    // THE IDEAL implementation would be proper deserializable type, example to JSON below
+                    /*
+                    {
+                        try {
+                            String json = objectMapper.writeValueAsString(o);
+                            log.debug("converting from object to json {}", json);
+                            return json;
+                        } catch (JsonProcessingException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }*/
+                s -> null
+                // THE IDEAL implementation would be proper serialization, example from JSON below
+                /*
+                {
+                    try {
+                        log.debug("converting from json to object {}", s);
+                        return objectMapper.readValue(s, BookingDetails.class);
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                }*/
+        );
+    }
+    @Bean
+    public InvocationContext invocationContext(ContextVariableTypeConverter<BookingDetails> bookingDetailsTypeConverter) {
+        return InvocationContext.builder()
+                .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
+                .build();
+    }
 }
