@@ -8,8 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
 import com.microsoft.semantickernel.contextvariables.ContextVariableTypeConverter;
-import com.microsoft.semantickernel.orchestration.InvocationContext;
-import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
 import com.microsoft.semantickernel.plugin.KernelPlugin;
 import com.microsoft.semantickernel.plugin.KernelPluginFactory;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
@@ -26,8 +24,7 @@ public class SKConfigs {
     @Value("${sk.azure.openai.endpoint}") String endpoint;
     @Value("${sk.deployment.name}") String deploymentName;
 
-    @Bean
-    public OpenAIAsyncClient openAIAsyncClient() {
+    private OpenAIAsyncClient openAIAsyncClient() {
         if(StringUtils.hasLength(endpoint)) {
             return new OpenAIClientBuilder()
                     .endpoint(endpoint)
@@ -39,22 +36,21 @@ public class SKConfigs {
                 .buildAsyncClient();
     }
 
-    @Bean
-    public ChatCompletionService chatCompletionService(OpenAIAsyncClient openAIAsyncClient) {
+    private ChatCompletionService chatCompletionService() {
         return OpenAIChatCompletion.builder()
-                .withOpenAIAsyncClient(openAIAsyncClient)
+                .withOpenAIAsyncClient(openAIAsyncClient())
                 .withModelId(deploymentName)
                 .build();
     }
 
     @Bean
-    public Kernel kernel(ChatCompletionService chatCompletionService, SKPlugins skPlugins) {
+    public Kernel kernel(SKPlugins skPlugins) {
         KernelPlugin kernelPlugin = KernelPluginFactory.createFromObject(
                 skPlugins,
                 "InformationFinder");
 
         return Kernel.builder()
-                .withAIService(ChatCompletionService.class, chatCompletionService)
+                .withAIService(ChatCompletionService.class, chatCompletionService())
                 .withPlugin(kernelPlugin)
                 .build();
     }
@@ -88,11 +84,5 @@ public class SKConfigs {
                     }
                 }*/
         );
-    }
-    @Bean
-    public InvocationContext invocationContext(ContextVariableTypeConverter<BookingDetails> bookingDetailsTypeConverter) {
-        return InvocationContext.builder()
-                .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
-                .build();
     }
 }
