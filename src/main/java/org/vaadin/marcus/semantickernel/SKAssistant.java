@@ -41,22 +41,19 @@ public class SKAssistant {
     @PostConstruct
     public void updateGlobalTypeConverter() {
         this.chatsInMemory = new HashMap<>();
+        // Allowing LLM to find and invoke the right function(s) required to perform a task
         this.invocationContext = InvocationContext.builder()
                 .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
                 .build();
+        // Setting the type converter globally, so when a BookingDetails object encountered,
+        // this can be used to convert the object to string and vice-versa
         ContextVariableTypes.addGlobalConverter(bookingDetailsTypeConverter);
     }
 
     public Flux<String> chat(String chatId, String userMessage) throws ServiceNotFoundException {
         log.debug("chatid {} and usermsg {}", chatId, userMessage);
 
-        if(!this.chatsInMemory.containsKey(chatId)) {
-            SKChatManager chatManager = new SKChatManager(chatId);
-            this.chatsInMemory.put(chatId, chatManager);
-        }
-
-        SKChatManager chatManager = this.chatsInMemory.get(chatId);
-        chatManager.getChatHistory().addUserMessage(userMessage);
+        SKChatManager chatManager = getChatManager(chatId, userMessage);
 
         ChatCompletionService chatCompletionService = this.kernel.getService(ChatCompletionService.class);
 
@@ -68,5 +65,16 @@ public class SKAssistant {
                     chatManager.getChatHistory().addAssistantMessage(response);
                     return response;
                 }).collect(Collectors.toList()));
+    }
+
+    private SKChatManager getChatManager(String chatId, String userMessage) {
+        if(!this.chatsInMemory.containsKey(chatId)) {
+            SKChatManager chatManager = new SKChatManager(chatId);
+            this.chatsInMemory.put(chatId, chatManager);
+        }
+
+        SKChatManager chatManager = this.chatsInMemory.get(chatId);
+        chatManager.getChatHistory().addUserMessage(userMessage);
+        return chatManager;
     }
 }

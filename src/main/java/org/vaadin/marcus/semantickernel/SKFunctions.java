@@ -9,13 +9,13 @@ import org.vaadin.marcus.service.BookingDetails;
 import org.vaadin.marcus.service.FlightService;
 
 @Component
-public class SKPlugins {
+public class SKFunctions {
 
-    Logger log = LoggerFactory.getLogger(SKPlugins.class);
+    Logger log = LoggerFactory.getLogger(SKFunctions.class);
 
     private final FlightService service;
 
-    public SKPlugins(FlightService service) {
+    public SKFunctions(FlightService service) {
         this.service = service;
     }
 

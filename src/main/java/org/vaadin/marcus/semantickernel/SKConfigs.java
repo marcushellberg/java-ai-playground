@@ -44,9 +44,9 @@ public class SKConfigs {
     }
 
     @Bean
-    public Kernel kernel(SKPlugins skPlugins) {
+    public Kernel kernel(SKFunctions skFunctions) {
         KernelPlugin kernelPlugin = KernelPluginFactory.createFromObject(
-                skPlugins,
+                skFunctions,
                 "InformationFinder");
 
         return Kernel.builder()
@@ -72,7 +72,7 @@ public class SKConfigs {
                             throw new RuntimeException(e);
                         }
                     }*/
-                s -> null
+                stringToObject -> null
                 // THE IDEAL implementation would be proper serialization, example from JSON below
                 /*
                 {
