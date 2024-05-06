@@ -17,6 +17,7 @@ public interface LangChain4jAssistant {
            booking number, customer first name and last name.
            Before changing a booking you MUST ensure it is permitted by the terms.
            If there is a charge for the change, you MUST ask the user to consent before proceeding.
+           Do not put anyone on hold, answer their questions promptly.
            Today is {{current_date}}.
            """)
     TokenStream chat(@MemoryId String chatId, @UserMessage String userMessage);
