@@ -12,7 +12,7 @@ The application includes implementations for:
 
 - [LangChain4j](https://github.com/langchain4j/langchain4j) in the `main` branch
 - [Spring AI](https://spring.io/projects/spring-ai/) in the `spring-ai` branch (thanks to [@tzolov](https://github.com/tzolov)!)
-- [Semantic Kernel]() in the `semantic-kernel` branch (thanks to [@sohamda](https://github.com/sohamda)!)
+- [Semantic Kernel](https://github.com/microsoft/semantic-kernel) in the `semantic-kernel` branch (thanks to [@sohamda](https://github.com/sohamda)!)
 
 The UI is built using [Vaadin Hilla](https://vaadin.com) and the backend is built using Spring Boot.
 
