@@ -12,7 +12,7 @@
     <properties>
         <java.version>17</java.version>
         <vaadin.version>24.4.0.alpha23</vaadin.version>
-        <langchain.version>0.30.0</langchain.version>
+        <semantic-kernel.version>1.0.1</semantic-kernel.version>
     </properties>
 
     <parent>
@@ -81,22 +81,18 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- LangChain4j dependencies -->
+        <!-- Semantic Kernel start-->
         <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-spring-boot-starter</artifactId>
-            <version>${langchain.version}</version>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-api</artifactId>
+            <version>${semantic-kernel.version}</version>
         </dependency>
         <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-open-ai-spring-boot-starter</artifactId>
-            <version>${langchain.version}</version>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-aiservices-openai</artifactId>
+            <version>${semantic-kernel.version}</version>
         </dependency>
-        <dependency>
-            <groupId>dev.langchain4j</groupId>
-            <artifactId>langchain4j-embeddings-all-minilm-l6-v2</artifactId>
-            <version>${langchain.version}</version>
-        </dependency>
+        <!-- Semantic Kernel end -->
 
         <dependency>
             <groupId>org.springframework.boot</groupId>

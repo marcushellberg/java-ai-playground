@@ -80,6 +80,7 @@ public class FlightService {
         booking.setDate(LocalDate.parse(newDate));
         booking.setFrom(from);
         booking.setTo(to);
+        booking.setBookingStatus(BookingStatus.CONFIRMED);
     }
 
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {

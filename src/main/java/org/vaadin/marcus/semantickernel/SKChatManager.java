@@ -1,15 +1,15 @@
-package org.vaadin.marcus.langchain4j;
+package org.vaadin.marcus.semantickernel;
 
-import dev.langchain4j.service.MemoryId;
-import dev.langchain4j.service.SystemMessage;
-import dev.langchain4j.service.TokenStream;
-import dev.langchain4j.service.UserMessage;
-import dev.langchain4j.service.spring.AiService;
+import com.microsoft.semantickernel.services.chatcompletion.ChatHistory;
 
-@AiService
-public interface LangChain4jAssistant {
+public class SKChatManager {
 
-    @SystemMessage("""
+    private String chatId;
+    private final ChatHistory chatHistory;
+
+    public SKChatManager(String chatId) {
+        this.chatId = chatId;
+        this.chatHistory = new ChatHistory("""
            You are a customer chat support agent of an airline named "Funnair",
            Respond in a friendly, helpful, and joyful manner.
            Before providing information about a booking or cancelling a booking,
@@ -18,6 +18,19 @@ public interface LangChain4jAssistant {
            Before changing a booking you MUST ensure it is permitted by the terms.
            If there is a charge for the change, you MUST ask the user to consent before proceeding.
            Today is {{current_date}}.
-           """)
-    TokenStream chat(@MemoryId String chatId, @UserMessage String userMessage);
+           """);
+    }
+
+    public String getChatId() {
+        return chatId;
+    }
+
+    public void setChatId(String chatId) {
+        this.chatId = chatId;
+    }
+
+    public ChatHistory getChatHistory() {
+        return chatHistory;
+    }
+
 }
