@@ -11,7 +11,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <vaadin.version>24.4.0.alpha23</vaadin.version>
+        <vaadin.version>24.4.0.beta3</vaadin.version>
         <langchain.version>0.30.0</langchain.version>
     </properties>
 
