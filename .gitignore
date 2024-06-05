@@ -44,3 +44,5 @@ out/
 storage/
 
 src/main/frontend/generated/
+
+src/main/bundles
