@@ -14,17 +14,21 @@ public class Lang4jTools {
         this.service = service;
     }
 
-    @Tool
+    @Tool("Retrieves information about a specific booking. " +
+            "This includes details such as booking number, first and last name, flight date, " +
+            "booking status, departure and arrival airports and booking class.")
     public BookingDetails getBookingDetails(String bookingNumber, String firstName, String lastName) {
         return service.getBookingDetails(bookingNumber, firstName, lastName);
     }
 
-    @Tool
+    @Tool("Allows to modify an existing booking. " +
+            "This includes making changes such as altering flight dates, departure and arrival airport.")
     public void changeBooking(String bookingNumber, String firstName, String lastName, String date, String from, String to) {
         service.changeBooking(bookingNumber, firstName, lastName, date, from, to);
     }
 
-    @Tool
+    @Tool("This includes removing the reservation from the system and handling any associated refund " +
+            "or cancellation policies as per the airline’s rules.")
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {
         service.cancelBooking(bookingNumber, firstName, lastName);
     }
