@@ -11,14 +11,14 @@
 
     <properties>
         <java.version>17</java.version>
-        <vaadin.version>24.4.0.beta3</vaadin.version>
-        <langchain.version>0.30.0</langchain.version>
+        <vaadin.version>24.4.11</vaadin.version>
+        <langchain.version>0.33.0</langchain.version>
     </properties>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.3</version>
+        <version>3.3.3</version>
     </parent>
 
     <repositories>
