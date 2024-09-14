@@ -19,7 +19,6 @@ export default function Index() {
   }]);
 
   useEffect(() => {
-    // Update bookings when we have received the full response
     if (!working) {
       BookingService.getBookings().then(setBookings);
     }
@@ -61,7 +60,6 @@ export default function Index() {
       .onComplete(() => setWorking(false));
   }
 
-
   return (
     <SplitLayout className="h-full">
       <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
@@ -70,8 +68,8 @@ export default function Index() {
         <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0"/>
       </div>
       <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
-        <h3>Bookings database</h3>
-        <Grid items={bookings} className="flex-shrink-0">
+        <h3>Bookings Awaiting Confirmation</h3>
+        <Grid items={bookings.filter(booking => booking.bookingStatus === "AWAITING_CONFIRMATION")} className="flex-shrink-0">
           <GridColumn path="bookingNumber" autoWidth header="#"/>
           <GridColumn path="firstName" autoWidth/>
           <GridColumn path="lastName" autoWidth/>
@@ -79,12 +77,23 @@ export default function Index() {
           <GridColumn path="from" autoWidth/>
           <GridColumn path="to" autoWidth/>
           <GridColumn path="bookingStatus" autoWidth header="Status">
-            {({item}) => item.bookingStatus === "CONFIRMED" ? "✅" : "❌"}
+            {() => "⏳"}
+          </GridColumn>
+          <GridColumn path="bookingClass" autoWidth/>
+        </Grid>
+
+        <h3>Available Flights</h3>
+        <Grid items={bookings.filter(booking => booking.bookingStatus === "AVAILABLE")} className="flex-shrink-0">
+          <GridColumn path="bookingNumber" autoWidth header="#"/>
+          <GridColumn path="date" autoWidth/>
+          <GridColumn path="from" autoWidth/>
+          <GridColumn path="to" autoWidth/>
+          <GridColumn path="bookingStatus" autoWidth header="Status">
+            {() => "🟢"}
           </GridColumn>
           <GridColumn path="bookingClass" autoWidth/>
         </Grid>
       </div>
     </SplitLayout>
-
   );
 }

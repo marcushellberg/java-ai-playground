@@ -52,7 +52,7 @@ public class FlightService {
             String from = airportCodes.get(random.nextInt(airportCodes.size()));
             String to = airportCodes.get(random.nextInt(airportCodes.size()));
             BookingClass bookingClass = BookingClass.values()[random.nextInt(BookingClass.values().length)];
-            Booking booking = new Booking("10" + (i + 1), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.CANCELLED, from, to, bookingClass);
+            Booking booking = new Booking("10" + (i + 1), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.AVAILABLE, from, to, bookingClass);
             bookings.add(booking);
         }
 
@@ -97,7 +97,7 @@ public class FlightService {
         if (booking.getDate().isBefore(LocalDate.now().plusDays(2))) {
             throw new IllegalArgumentException("Booking cannot be cancelled within 48 hours of the start date.");
         }
-        booking.setBookingStatus(BookingStatus.CANCELLED);
+        booking.setBookingStatus(BookingStatus.AVAILABLE);
     }
 
     public void updateBooking(String bookingNumber, String firstName, String lastName,
