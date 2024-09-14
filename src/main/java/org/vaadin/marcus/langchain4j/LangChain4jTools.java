@@ -41,14 +41,18 @@ public class LangChain4jTools {
         service.cancelBooking(bookingNumber, firstName, lastName);
     }
 
+    //book a flight
     @Tool("""
-        Updates an existing booking.
+        Books a flight. With only booking numer first and last name
         """)
-    public void updateBooking(String bookingNumber, String firstName, String lastName,
-                              LocalDate newFlightDate, String newDepartureAirport, String newArrivalAirport) {
-        service.updateBooking(bookingNumber, firstName, lastName, newFlightDate, newDepartureAirport, newArrivalAirport);
+    public void bookFlight(String bookingNumber, String firstName, String lastName) {
+        service.updateBooking(bookingNumber, firstName, lastName);
     }
 
+   
+
+
+  
     //get a list of available flights
     @Tool("""
         Retrieves a list of available bookings.

@@ -100,12 +100,12 @@ public class FlightService {
         booking.setBookingStatus(BookingStatus.AVAILABLE);
     }
 
-    public void updateBooking(String bookingNumber, String firstName, String lastName,
-                              LocalDate newFlightDate, String newDepartureAirport, String newArrivalAirport) {
+
+
+    public void updateBooking(String bookingNumber, String firstName, String lastName){
         var booking = findBooking(bookingNumber, firstName, lastName);
-        booking.setDate(newFlightDate);
-        booking.setFrom(newDepartureAirport);
-        booking.setTo(newArrivalAirport);
+        booking.setCustomer(new Customer(firstName, lastName));
+        db.updateBooking(booking);
     }
 //get availabe bookings
     public List<BookingDetails> getAvailableBookings() {
