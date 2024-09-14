@@ -49,15 +49,11 @@ public class LangChain4jTools {
         service.updateBooking(bookingNumber, firstName, lastName);
     }
 
-   
-
-
-  
     //get a list of available flights
     @Tool("""
         Retrieves a list of available bookings.
         """)
-    public List<BookingDetails> getAvailableBookings() { // Changed return type to List<BookingDetails>
+    public List<BookingDetails> getAvailableBookings() {
         return service.getAvailableBookings();
     }
 
@@ -68,5 +64,4 @@ public class LangChain4jTools {
     public void confirmBooking(String bookingNumber, String firstName, String lastName) {
         service.confirmBooking(bookingNumber, firstName, lastName);
     }
-   
 }

@@ -7,11 +7,16 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import java.util.HashSet;
+import java.util.Set;
 
 @Service
 public class FlightService {
 
     private final BookingData db;
+    private Set<String> usedFlightNumbers = new HashSet<>();
+    private Random random = new Random();
+    private List<String> airlineCodes = List.of("FA", "AA", "VA", "BA", "LH", "UA");
 
     public FlightService() {
         db = new BookingData();
@@ -40,7 +45,7 @@ public class FlightService {
 
             LocalDate date = LocalDate.now().plusDays(2*i);
 
-            Booking booking = new Booking("10" + (i + 1), date, customer, BookingStatus.AWAITING_CONFIRMATION, from, to, bookingClass);
+            Booking booking = new Booking(generateUniqueFlightNumber(), date, customer, BookingStatus.AWAITING_CONFIRMATION, from, to, bookingClass);
             customer.getBookings().add(booking);
 
             customers.add(customer);
@@ -52,7 +57,7 @@ public class FlightService {
             String from = airportCodes.get(random.nextInt(airportCodes.size()));
             String to = airportCodes.get(random.nextInt(airportCodes.size()));
             BookingClass bookingClass = BookingClass.values()[random.nextInt(BookingClass.values().length)];
-            Booking booking = new Booking("10" + (i + 1), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.AVAILABLE, from, to, bookingClass);
+            Booking booking = new Booking(generateUniqueFlightNumber(), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.AVAILABLE, from, to, bookingClass);
             bookings.add(booking);
         }
 
@@ -100,23 +105,29 @@ public class FlightService {
         booking.setBookingStatus(BookingStatus.AVAILABLE);
     }
 
-
-
     public void updateBooking(String bookingNumber, String firstName, String lastName){
-        var booking = findBooking(bookingNumber, firstName, lastName);
+        var booking = getBookingFromFlightNumber(bookingNumber);
         booking.setCustomer(new Customer(firstName, lastName));
+        booking.setBookingStatus(BookingStatus.AWAITING_CONFIRMATION);
         db.updateBooking(booking);
     }
-//get availabe bookings
+
     public List<BookingDetails> getAvailableBookings() {
         return db.getAvailableBookings().stream().map(this::toBookingDetails).toList();
     }
 
-    //confirm booking
     public void confirmBooking(String bookingNumber, String firstName, String lastName) {
         var booking = findBooking(bookingNumber, firstName, lastName);
         booking.setBookingStatus(BookingStatus.CONFIRMED);
         db.updateBooking(booking);
+    }
+
+    //get booking froom flight number
+    public Booking getBookingFromFlightNumber(String flightNumber){
+        return db.getBookings().stream()
+                .filter(b -> b.getBookingNumber().equalsIgnoreCase(flightNumber))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found"));
     }
 
     private BookingDetails toBookingDetails(Booking booking){
@@ -130,5 +141,19 @@ public class FlightService {
                 booking.getTo(),
                 booking.getBookingClass().toString()
         );
+    }
+
+    public String generateUniqueFlightNumber() {
+        String flightNumber;
+        do {
+            flightNumber = generateFlightNumber();
+        } while (!usedFlightNumbers.add(flightNumber));
+        return flightNumber;
+    }
+
+    private String generateFlightNumber() {
+        String airline = airlineCodes.get(random.nextInt(airlineCodes.size()));
+        int number = random.nextInt(1000, 9999);
+        return airline + number;
     }
 }
