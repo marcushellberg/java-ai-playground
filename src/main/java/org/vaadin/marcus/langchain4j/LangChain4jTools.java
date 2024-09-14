@@ -6,6 +6,7 @@ import org.vaadin.marcus.service.BookingDetails;
 import org.vaadin.marcus.service.FlightService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 public class LangChain4jTools {
@@ -33,9 +34,27 @@ public class LangChain4jTools {
         service.changeBooking(bookingNumber, firstName, lastName, newFlightDate, newDepartureAirport, newArrivalAirport);
     }
 
-    @Tool
+    @Tool("""
+            Cancels an existing booking.
+            """)
     public void cancelBooking(String bookingNumber, String firstName, String lastName) {
         service.cancelBooking(bookingNumber, firstName, lastName);
     }
 
+    @Tool("""
+        Updates an existing booking.
+        """)
+    public void updateBooking(String bookingNumber, String firstName, String lastName,
+                              LocalDate newFlightDate, String newDepartureAirport, String newArrivalAirport) {
+        service.updateBooking(bookingNumber, firstName, lastName, newFlightDate, newDepartureAirport, newArrivalAirport);
+    }
+
+    //get a list of available flights
+    @Tool("""
+        Retrieves a list of available bookings.
+        """)
+    public List<BookingDetails> getAvailableBookings() { // Changed return type to List<BookingDetails>
+        return service.getAvailableBookings();
+    }
+   
 }

@@ -47,6 +47,15 @@ public class FlightService {
             bookings.add(booking);
         }
 
+        //generate some available bookings
+        for(int i = 0; i < 30; i++){
+            String from = airportCodes.get(random.nextInt(airportCodes.size()));
+            String to = airportCodes.get(random.nextInt(airportCodes.size()));
+            BookingClass bookingClass = BookingClass.values()[random.nextInt(BookingClass.values().length)];
+            Booking booking = new Booking("10" + (i + 1), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.CONFIRMED, from, to, bookingClass);
+            bookings.add(booking);
+        }
+
         // Reset the database on each start
         db.setCustomers(customers);
         db.setBookings(bookings);
@@ -89,6 +98,18 @@ public class FlightService {
             throw new IllegalArgumentException("Booking cannot be cancelled within 48 hours of the start date.");
         }
         booking.setBookingStatus(BookingStatus.CANCELLED);
+    }
+
+    public void updateBooking(String bookingNumber, String firstName, String lastName,
+                              LocalDate newFlightDate, String newDepartureAirport, String newArrivalAirport) {
+        var booking = findBooking(bookingNumber, firstName, lastName);
+        booking.setDate(newFlightDate);
+        booking.setFrom(newDepartureAirport);
+        booking.setTo(newArrivalAirport);
+    }
+//get availabe bookings
+    public List<BookingDetails> getAvailableBookings() {
+        return db.getAvailableBookings().stream().map(this::toBookingDetails).toList();
     }
 
     private BookingDetails toBookingDetails(Booking booking){

@@ -24,4 +24,11 @@ public class BookingData {
     public void setBookings(List<Booking> bookings) {
         this.bookings = bookings;
     }
+
+    //get available bookings ones with no first and last name
+    public List<Booking> getAvailableBookings() {
+        return bookings.stream().filter(b -> b.getCustomer().getFirstName() == null && b.getCustomer().getLastName() == null).toList();
+    }
+
+   
 }
