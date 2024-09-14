@@ -30,5 +30,10 @@ public class BookingData {
         return bookings.stream().filter(b -> b.getCustomer().getFirstName() == null && b.getCustomer().getLastName() == null).toList();
     }
 
+    //update booking in db
+    public void updateBooking(Booking booking) {
+        bookings.set(bookings.indexOf(booking), booking);
+    }
+
    
 }

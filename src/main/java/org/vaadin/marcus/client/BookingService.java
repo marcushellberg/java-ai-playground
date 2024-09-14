@@ -21,5 +21,10 @@ public class BookingService {
         return flightService.getBookings();
     }
 
+    //confirm booking
+    public void confirmBooking(String bookingNumber, String firstName, String lastName) {
+        flightService.confirmBooking(bookingNumber, firstName, lastName);
+    }
+
     
 }

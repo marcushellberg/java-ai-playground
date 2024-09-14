@@ -56,5 +56,13 @@ public class LangChain4jTools {
     public List<BookingDetails> getAvailableBookings() { // Changed return type to List<BookingDetails>
         return service.getAvailableBookings();
     }
+
+    // confirm booking
+    @Tool("""
+        Confirms an existing booking.
+        """)
+    public void confirmBooking(String bookingNumber, String firstName, String lastName) {
+        service.confirmBooking(bookingNumber, firstName, lastName);
+    }
    
 }

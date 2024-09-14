@@ -40,7 +40,7 @@ public class FlightService {
 
             LocalDate date = LocalDate.now().plusDays(2*i);
 
-            Booking booking = new Booking("10" + (i + 1), date, customer, BookingStatus.CONFIRMED, from, to, bookingClass);
+            Booking booking = new Booking("10" + (i + 1), date, customer, BookingStatus.AWAITING_CONFIRMATION, from, to, bookingClass);
             customer.getBookings().add(booking);
 
             customers.add(customer);
@@ -52,7 +52,7 @@ public class FlightService {
             String from = airportCodes.get(random.nextInt(airportCodes.size()));
             String to = airportCodes.get(random.nextInt(airportCodes.size()));
             BookingClass bookingClass = BookingClass.values()[random.nextInt(BookingClass.values().length)];
-            Booking booking = new Booking("10" + (i + 1), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.CONFIRMED, from, to, bookingClass);
+            Booking booking = new Booking("10" + (i + 1), LocalDate.now().plusDays(2*i), new Customer(), BookingStatus.CANCELLED, from, to, bookingClass);
             bookings.add(booking);
         }
 
@@ -110,6 +110,13 @@ public class FlightService {
 //get availabe bookings
     public List<BookingDetails> getAvailableBookings() {
         return db.getAvailableBookings().stream().map(this::toBookingDetails).toList();
+    }
+
+    //confirm booking
+    public void confirmBooking(String bookingNumber, String firstName, String lastName) {
+        var booking = findBooking(bookingNumber, firstName, lastName);
+        booking.setBookingStatus(BookingStatus.CONFIRMED);
+        db.updateBooking(booking);
     }
 
     private BookingDetails toBookingDetails(Booking booking){
