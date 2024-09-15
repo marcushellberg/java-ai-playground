@@ -7,46 +7,37 @@ import org.vaadin.marcus.service.ClientProfile;
 import org.vaadin.marcus.service.ClientService;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @BrowserCallable
 @AnonymousAllowed
 @Service
 public class ClientProfileService {
-    private final ClientService clientService;
+    private final Map<String, ClientProfile> clients = new ConcurrentHashMap<>();
 
     public ClientProfileService(ClientService clientService) {
-        this.clientService = clientService;
+        // Assuming clientService is not needed for this implementation
     }
 
     public List<ClientProfile> getAllClients() {
-        return clientService.getAllClientProfiles();
+        return List.copyOf(clients.values());
     }
 
     public ClientProfile getClientByEmail(String email) {
-        // Implement this method in the backend ClientService if needed
-        throw new UnsupportedOperationException("Not implemented yet");
+        return clients.get(email);
     }
 
-    public ClientProfile addNewClient(ClientProfile newClient) {
-        clientService.createClientProfile(newClient);
-        return newClient;
+    public void updateClient(ClientProfile profile) {
+        clients.put(profile.getEmail(), profile);
     }
 
-    public ClientProfile updateClient(ClientProfile updatedClient) {
-        clientService.updateClientProfile(updatedClient.getId(), updatedClient);
-        return updatedClient;
+    public ClientProfile addClient(ClientProfile profile) {
+        clients.put(profile.getEmail(), profile);
+        return profile;
     }
 
-    public void deleteClient(String clientId) {
-        clientService.deleteClientProfile(clientId);
-    }
-
-    public List<ClientProfile> getClientsByStatus(String status) {
-        // Implement this method in the backend ClientService if needed
-        throw new UnsupportedOperationException("Not implemented yet");
-    }
-
-    public ClientProfile getClientProfile(String clientId) {
-        return clientService.getClientProfile(clientId);
+    public void deleteClient(String email) {
+        clients.remove(email);
     }
 }

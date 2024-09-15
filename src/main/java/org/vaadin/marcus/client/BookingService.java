@@ -62,4 +62,16 @@ public class BookingService {
     public String generateBookings() {
         return simulationDataService.generateBookings(50); // Generate 50 bookings
     }
+
+    public ClientProfile updateOrAddClientProfile(ClientProfile profile) {
+        ClientProfile existingProfile = clientProfileService.getClientByEmail(profile.getEmail());
+        if (existingProfile != null) {
+            // Update existing profile
+            clientProfileService.updateClient(profile);
+            return profile;
+        } else {
+            // Add new profile
+            return clientProfileService.addClient(profile);
+        }
+    }
 }
