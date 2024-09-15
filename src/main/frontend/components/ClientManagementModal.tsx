@@ -3,8 +3,12 @@ import { Dialog } from '@vaadin/react-components/Dialog.js';
 import { Grid } from '@vaadin/react-components/Grid.js';
 import { GridColumn } from '@vaadin/react-components/GridColumn.js';
 import { ComboBox } from '@vaadin/react-components/ComboBox.js';
+import { Button } from '@vaadin/react-components/Button.js';
+import { TextField } from '@vaadin/react-components/TextField.js';
+import { ProgressBar } from '@vaadin/react-components/ProgressBar.js';
 import { BookingService } from 'Frontend/generated/endpoints';
-import { ClientProfile } from 'Frontend/generated/org/vaadin/marcus/service/ClientProfile';
+import ClientProfile from 'Frontend/generated/org/vaadin/marcus/service/ClientProfile';
+import LoyaltyStatus from 'Frontend/generated/org/vaadin/marcus/service/LoyaltyStatus';
 
 interface ClientManagementModalProps {
   open: boolean;
@@ -13,7 +17,10 @@ interface ClientManagementModalProps {
 
 export default function ClientManagementModal({ open, onClose }: ClientManagementModalProps) {
   const [clients, setClients] = useState<ClientProfile[]>([]);
-  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+  const [loyaltyStatusFilter, setLoyaltyStatusFilter] = useState<LoyaltyStatus | undefined>(undefined);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
+  const [isMaximized, setIsMaximized] = useState(false);
 
   useEffect(() => {
     if (open) {
@@ -22,49 +29,89 @@ export default function ClientManagementModal({ open, onClose }: ClientManagemen
   }, [open]);
 
   const fetchClients = async () => {
+    setIsLoading(true);
     try {
-      const fetchedClients = await BookingService.getAllClients();
+      const fetchedClients = await BookingService.getAllClientProfiles();
       setClients(fetchedClients);
     } catch (error) {
       console.error('Failed to fetch clients:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const filteredClients = statusFilter
-    ? clients.filter(client => client.status === statusFilter)
-    : clients;
+  const handleSearch = async () => {
+    setIsLoading(true);
+    try {
+      const searchResults = await BookingService.searchClients(searchTerm);
+      setClients(searchResults);
+    } catch (error) {
+      console.error('Failed to search clients:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-  const statusOptions = Array.from(new Set(clients.map(client => client.status))).filter(Boolean);
+  const filteredClients = clients
+    .filter(client => !loyaltyStatusFilter || client.loyaltyStatus === loyaltyStatusFilter);
+
+  const loyaltyStatusOptions = Object.values(LoyaltyStatus);
+
+  const handleClose = () => onClose();
+  const handleMinimize = () => {/* Implement minimize functionality */};
+  const handleMaximize = () => setIsMaximized(!isMaximized);
 
   return (
     <Dialog 
       opened={open} 
       onOpenedChanged={(e) => !e.detail.value && onClose()} 
-      header="Client Management"
+      headerTitle="Client Management"
       draggable
       resizable
       modeless
+      className={`windows-style ${isMaximized ? 'maximized' : ''}`}
     >
-      <div className="p-4" style={{ minWidth: '300px', minHeight: '200px' }}>
-        <h3 className="text-lg font-semibold mb-4">Client List</h3>
-        <ComboBox
-          label="Filter by Status"
-          items={statusOptions}
-          value={statusFilter}
-          onChange={(e) => setStatusFilter(e.target.value)}
-          clearButtonVisible
-          className="mb-4"
-        />
-        <Grid items={filteredClients}>
-          {clients.length > 0 && clients[0].firstName !== undefined && (
-            <GridColumn path="firstName" header="First Name" />
-          )}
-          {clients.length > 0 && clients[0].lastName !== undefined && (
-            <GridColumn path="lastName" header="Last Name" />
-          )}
-          <GridColumn path="email" header="Email" />
-          <GridColumn path="status" header="Status" />
-        </Grid>
+      <div slot="header" className="windows-title-bar">
+        <div className="title">Client Management</div>
+        <div className="window-controls">
+          <Button theme="tertiary icon" aria-label="Minimize" onClick={handleMinimize}>_</Button>
+          <Button theme="tertiary icon" aria-label="Maximize" onClick={handleMaximize}>□</Button>
+          <Button theme="tertiary icon" aria-label="Close" onClick={handleClose}>×</Button>
+        </div>
+      </div>
+      <div className="p-4 windows-content" style={{ minWidth: '600px', minHeight: '400px' }}>
+        {isLoading ? (
+          <ProgressBar indeterminate />
+        ) : (
+          <>
+            <div className="mb-4 flex justify-between items-end">
+              <TextField
+                placeholder="Search clients..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
+                className="mr-2 flex-grow"
+              />
+              <Button onClick={handleSearch} theme="primary">Search</Button>
+              <ComboBox
+                label="Filter by Loyalty Status"
+                items={loyaltyStatusOptions}
+                value={loyaltyStatusFilter}
+                onChange={(e) => setLoyaltyStatusFilter(e.target.value as LoyaltyStatus)}
+                clearButtonVisible
+                className="ml-2"
+              />
+            </div>
+            <Grid items={filteredClients} className="client-grid">
+              <GridColumn path="name" header="Name" />
+              <GridColumn path="contactInfo" header="Contact Info" />
+              <GridColumn path="frequentFlyerNumber" header="Frequent Flyer Number" />
+              <GridColumn path="loyaltyStatus" header="Loyalty Status" />
+              <GridColumn path="travelScore" header="Travel Score" />
+              <GridColumn path="lastTravelDate" header="Last Travel" />
+            </Grid>
+          </>
+        )}
       </div>
     </Dialog>
   );

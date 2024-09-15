@@ -1,17 +1,20 @@
-package org.vaadin.marcus.langchain4j;
+package org.vaadin.marcus.config;
 
 import dev.langchain4j.data.document.parser.TextDocumentParser;
 import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.chat.ChatMemoryProvider;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.Tokenizer;
+import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.embedding.onnx.allminilml6v2.AllMiniLmL6V2EmbeddingModel;
+import dev.langchain4j.model.ollama.OllamaChatModel;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.content.retriever.EmbeddingStoreContentRetriever;
 import dev.langchain4j.store.embedding.EmbeddingStore;
 import dev.langchain4j.store.embedding.EmbeddingStoreIngestor;
 import dev.langchain4j.store.embedding.inmemory.InMemoryEmbeddingStore;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -21,7 +24,25 @@ import static dev.langchain4j.data.document.loader.FileSystemDocumentLoader.load
 import static dev.langchain4j.data.document.splitter.DocumentSplitters.recursive;
 
 @Configuration
-public class LangChain4jConfig {
+public class LangChainConfig {
+
+    @Value("${chat.model.base-url}")
+    private String baseUrl;
+
+    @Value("${chat.model.name}")
+    private String modelName;
+
+    @Value("${chat.model.temperature}")
+    private double temperature;
+
+    @Bean
+    public ChatLanguageModel chatLanguageModel() {
+        return OllamaChatModel.builder()
+                .baseUrl(baseUrl)
+                .modelName(modelName)
+                .temperature(temperature)
+                .build();
+    }
 
     @Bean
     EmbeddingModel embeddingModel() {
@@ -33,12 +54,11 @@ public class LangChain4jConfig {
         return new InMemoryEmbeddingStore<>();
     }
 
-    // In the real world, ingesting documents would often happen separately, on a CI server or similar
     @Bean
     CommandLineRunner ingestDocsForLangChain(
             EmbeddingModel embeddingModel,
             EmbeddingStore<TextSegment> embeddingStore,
-            Tokenizer tokenizer, // Tokenizer is provided by langchain4j-open-ai-spring-boot-starter
+            Tokenizer tokenizer,
             ResourceLoader resourceLoader
     ) {
         return args -> {
@@ -68,7 +88,6 @@ public class LangChain4jConfig {
 
     @Bean
     ChatMemoryProvider chatMemoryProvider(Tokenizer tokenizer) {
-        // Tokenizer is provided by langchain4j-open-ai-spring-boot-starter
         return chatId -> TokenWindowChatMemory.withMaxTokens(1000, tokenizer);
     }
 }

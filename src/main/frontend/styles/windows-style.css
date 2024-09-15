@@ -1,0 +1,50 @@
+.windows-style {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  border: 1px solid #ccc;
+  border-radius: 0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.windows-style.maximized {
+  width: 100vw !important;
+  height: 100vh !important;
+  max-width: none !important;
+  max-height: none !important;
+}
+
+.windows-title-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 4px 8px;
+  user-select: none;
+}
+
+.windows-title-bar .title {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.windows-title-bar .window-controls {
+  display: flex;
+}
+
+.windows-title-bar .window-controls button {
+  width: 24px;
+  height: 24px;
+  font-size: 14px;
+  line-height: 24px;
+  text-align: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.windows-title-bar .window-controls button:hover {
+  background-color: #e0e0e0;
+}
+
+.windows-content {
+  padding: 16px;
+}

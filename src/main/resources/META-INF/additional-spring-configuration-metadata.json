@@ -1,0 +1,17 @@
+{"properties": [
+  {
+    "name": "chat.model.base-url",
+    "type": "java.lang.String",
+    "description": "A description for 'chat.model.base-url'"
+  },
+  {
+    "name": "chat.model.name",
+    "type": "java.lang.String",
+    "description": "A description for 'chat.model.name'"
+  },
+  {
+    "name": "chat.model.temperature",
+    "type": "java.lang.String",
+    "description": "A description for 'chat.model.temperature'"
+  }
+]}

@@ -29,16 +29,15 @@ public class ClientProfileDialog extends Dialog {
         binder.bindInstanceFields(this);
         binder.readBean(clientProfile);
 
-        Button saveButton = new Button("Save", e -> saveClient());
+        Button saveButton = new Button("Save", e -> saveProfile());
         Button cancelButton = new Button("Cancel", e -> close());
 
         add(formLayout, saveButton, cancelButton);
     }
 
-    private void saveClient() {
-        if (binder.writeBeanIfValid(clientProfile)) {
-            clientService.updateClientProfile(clientProfile.getId(), clientProfile);
-            close();
-        }
+    private void saveProfile() {
+        binder.writeBeanIfValid(clientProfile);
+        clientService.updateClientProfile(clientProfile.getId(), clientProfile);
+        close();
     }
 }

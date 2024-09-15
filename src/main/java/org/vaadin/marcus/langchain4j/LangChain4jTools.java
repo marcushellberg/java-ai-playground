@@ -3,7 +3,6 @@ package org.vaadin.marcus.langchain4j;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Component;
 import org.vaadin.marcus.service.*;
-import org.vaadin.marcus.client.BookingService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,7 +16,7 @@ public class LangChain4jTools {
     private final FlightService flightService;
     private final ClientService clientService;
 
-    public LangChain4jTools(FlightService flightService, ClientService clientService, BookingService bookingService) {
+    public LangChain4jTools(FlightService flightService, ClientService clientService) {
         this.flightService = flightService;
         this.clientService = clientService;
     }
@@ -61,76 +60,53 @@ public class LangChain4jTools {
     @Tool("Update client profile")
     public String updateClientProfile(String clientId, String profileData) {
         Map<String, String> profileMap = parseProfileData(profileData);
-        clientService.updateProfile(clientId, profileMap);
-        return "Client profile updated successfully.";
+        ClientProfile profile = clientService.getClientProfile(clientId);
+        if (profile != null) {
+            updateProfileFromMap(profile, profileMap);
+            clientService.updateClientProfile(clientId, profile);
+            return "Client profile updated successfully.";
+        }
+        return "Client profile not found.";
     }
 
-    @Tool("Get client profile")
-    public String getClientProfile(String clientId) {
-        ClientProfile profile = clientService.getClientProfile(clientId);
-        return profile != null ? profile.toString() : "Client profile not found.";
+    private void updateProfileFromMap(ClientProfile profile, Map<String, String> profileMap) {
+        if (profileMap.containsKey("name")) profile.setName(profileMap.get("name"));
+        if (profileMap.containsKey("contactInfo")) profile.setContactInfo(profileMap.get("contactInfo"));
+        if (profileMap.containsKey("frequentFlyerNumber")) profile.setFrequentFlyerNumber(profileMap.get("frequentFlyerNumber"));
+        // Add more fields as needed
     }
 
     @Tool("Add frequent flyer information")
     public String addFrequentFlyerInfo(String clientId, String frequentFlyerNumber) {
-        clientService.addFrequentFlyerInfo(clientId, frequentFlyerNumber);
-        return "Frequent flyer information added successfully.";
+        ClientProfile profile = clientService.getClientProfile(clientId);
+        if (profile != null) {
+            profile.setFrequentFlyerNumber(frequentFlyerNumber);
+            clientService.updateClientProfile(clientId, profile);
+            return "Frequent flyer information added successfully.";
+        }
+        return "Client profile not found.";
     }
 
     @Tool("Get client's past bookings")
     public String getClientPastBookings(String clientId) {
-        List<String> pastBookings = clientService.getPastBookings(clientId);
-        return String.join(", ", pastBookings);
+        ClientProfile profile = clientService.getClientProfile(clientId);
+        if (profile != null) {
+            // Implement logic to get past bookings
+            return "Past bookings retrieval not implemented yet.";
+        }
+        return "Client profile not found.";
     }
 
     @Tool("Create client profile")
-    public String createClientProfile(String clientId, String name, String contactInfo, String preferences) {
-        Map<String, String> preferencesMap = parsePreferences(preferences);
-        ClientProfile profile = new ClientProfile(clientId, name, contactInfo, preferencesMap);
-        clientService.createClientProfile(clientId, profile);
+    public String createClientProfile(String clientId, String name, String contactInfo, String frequentFlyerNumber, String loyaltyStatus, int travelScore, String lastTravelDate) {
+        ClientProfile profile = new ClientProfile(clientId, name, contactInfo, frequentFlyerNumber, LoyaltyStatus.valueOf(loyaltyStatus), travelScore, lastTravelDate);
+        clientService.createClientProfile(profile);
         return "Client profile created successfully.";
     }
 
-    @Tool("Search clients")
-    public String searchClients(String query) {
-        List<ClientProfile> results = clientService.searchClients(query);
-        return results.toString();
-    }
-
-    @Tool("Add booking to client history")
-    public String addBooking(String clientId, String bookingNumber, String date, String destination, String status) {
-        Booking booking = new Booking(bookingNumber, LocalDate.parse(date), destination, status);
-        clientService.addBooking(clientId, booking);
-        return "Booking added to client history successfully.";
-    }
-
-    @Tool("Get client booking history")
-    public String getBookingHistory(String clientId) {
-        List<Booking> history = clientService.getBookingHistory(clientId);
-        return history.toString();
-    }
-
-    @Tool("Log client interaction")
-    public String logInteraction(String clientId, String type, String content) {
-        Interaction interaction = new Interaction(LocalDateTime.now(), type, content);
-        clientService.logInteraction(clientId, interaction);
-        return "Client interaction logged successfully.";
-    }
-
-    @Tool("Get client interactions")
-    public String getClientInteractions(String clientId) {
-        List<Interaction> interactions = clientService.getClientInteractions(clientId);
-        return interactions.toString();
-    }
-
-    @Tool("Segment clients")
-    public String segmentClients(boolean highSpender, boolean frequentTraveler) {
-        SegmentationCriteria criteria = new SegmentationCriteria();
-        criteria.setHighSpender(highSpender);
-        criteria.setFrequentTraveler(frequentTraveler);
-        List<ClientProfile> segmentedClients = clientService.segmentClients(criteria);
-        return segmentedClients.toString();
-    }
+    // Remove or update methods that are no longer supported by ClientService
+    // For example, you might want to remove or update these methods:
+    // addBooking, getBookingHistory, logInteraction, getClientInteractions, segmentClients
 
     private Map<String, String> parseProfileData(String profileData) {
         Map<String, String> profileMap = new HashMap<>();
@@ -142,10 +118,5 @@ public class LangChain4jTools {
             }
         }
         return profileMap;
-    }
-
-    private Map<String, String> parsePreferences(String preferences) {
-        // Implement parsing logic for preferences
-        return new HashMap<>();
     }
 }

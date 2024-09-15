@@ -1,0 +1,36 @@
+/* Add this file to your project and import it in your main layout or index file */
+
+.client-grid,
+.flight-status-grid {
+  --lumo-font-size-s: 14px;
+  --lumo-font-size-m: 16px;
+  --lumo-font-size-l: 18px;
+}
+
+.client-grid::part(cell),
+.flight-status-grid::part(cell) {
+  padding: 8px 16px;
+}
+
+.client-grid::part(header-cell),
+.flight-status-grid::part(header-cell) {
+  background-color: var(--lumo-contrast-5pct);
+  font-weight: bold;
+}
+
+.windows-style {
+  --lumo-border-radius: 4px;
+}
+
+.windows-title-bar {
+  background-color: var(--lumo-primary-color);
+  color: var(--lumo-primary-contrast-color);
+}
+
+.windows-title-bar .window-controls button {
+  color: var(--lumo-primary-contrast-color);
+}
+
+.windows-content {
+  background-color: var(--lumo-base-color);
+}

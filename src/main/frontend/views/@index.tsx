@@ -11,19 +11,17 @@ import {
   Notification, 
   SplitLayout, 
   TextField,
-  ProgressBar // Use ProgressBar instead of CircularProgress
+  ProgressBar,
+  ComboBox
 } from "@vaadin/react-components";
-
-// Remove this line
-// import { CircularProgress } from "@vaadin/react-components/CircularProgress.js";
 
 // Local imports
 import { AssistantService, BookingService } from "../generated/endpoints";
-import BookingDetails from "../generated/org/vaadin/marcus/service/BookingDetails";
 import Message, { MessageItem } from "../components/Message";
 import MessageList from "Frontend/components/MessageList";
 import CustomButton from "../components/CustomButton";
 import ClientManagementModal from "../components/ClientManagementModal";
+import FlightStatusWidget from '../components/FlightStatusWidget';
 
 const statusIcons: { [key: string]: string } = {
   CONFIRMED: "✅",
@@ -33,19 +31,22 @@ const statusIcons: { [key: string]: string } = {
   AVAILABLE: "🟢"
 };
 
+const firstNames = ["James", "Mary", "John", "Patricia", "Robert", "Jennifer", "Michael", "Linda", "William", "Elizabeth"];
+const lastNames = ["Smith", "Johnson", "Williams", "Brown", "Jones", "Garcia", "Miller", "Davis", "Rodriguez", "Martinez"];
+
 export default function Index() {
   const [chatId] = useState(nanoid());
   const [working, setWorking] = useState(false);
-  const [bookings, setBookings] = useState<BookingDetails[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
   const [messages, setMessages] = useState<MessageItem[]>([{
     role: 'assistant',
     content: 'Welcome to Funnair! How can I help you?'
   }]);
-  const [showConfirmed, setShowConfirmed] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [errorNotification, setErrorNotification] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string | undefined>(undefined);
   const [visibleBookings, setVisibleBookings] = useState(10);
   const [clientManagementOpen, setClientManagementOpen] = useState(false);
 
@@ -53,13 +54,13 @@ export default function Index() {
     (booking.bookingNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
     (booking.firstName?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
     (booking.lastName?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
-  );
+  ).filter(booking => !statusFilter || booking.bookingStatus === statusFilter);
 
   useEffect(() => {
     setIsLoading(true);
     setError(null);
     // Generate mock data with 50 records
-    const mockBookings: BookingDetails[] = Array.from({ length: 50 }, (_, i) => {
+    const mockBookings: any[] = Array.from({ length: 50 }, (_, i) => {
       const statuses = ["CONFIRMED", "COMPLETED", "CANCELLED", "AWAITING_CONFIRMATION", "AVAILABLE"];
       const cities = ["New York", "London", "Paris", "Tokyo", "Sydney", "Los Angeles", "Chicago", "Berlin", "Moscow", "Beijing", "Dubai", "Rome", "Amsterdam", "Singapore", "Toronto"];
       const classes = ["Economy", "Business", "First"];
@@ -69,14 +70,15 @@ export default function Index() {
         return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString().split('T')[0];
       };
       const randomCity = () => cities[Math.floor(Math.random() * cities.length)];
+      const status = statuses[Math.floor(Math.random() * statuses.length)];
       return {
         bookingNumber: `B${(i + 1).toString().padStart(3, '0')}`,
-        firstName: `FirstName${i + 1}`,
-        lastName: `LastName${i + 1}`,
+        firstName: status === "AVAILABLE" ? "" : firstNames[Math.floor(Math.random() * firstNames.length)],
+        lastName: status === "AVAILABLE" ? "" : lastNames[Math.floor(Math.random() * lastNames.length)],
         date: randomDate(),
         from: randomCity(),
         to: randomCity(),
-        bookingStatus: statuses[Math.floor(Math.random() * statuses.length)],
+        bookingStatus: status,
         bookingClass: classes[Math.floor(Math.random() * classes.length)]
       };
     });
@@ -119,40 +121,36 @@ export default function Index() {
       .onComplete(() => setWorking(false));
   };
 
-  const renderStatus = (booking: BookingDetails) => {
+  const renderStatus = (booking: any) => {
     const status = booking.bookingStatus;
     return statusIcons[status as keyof typeof statusIcons] || status;
   };
 
-  const awaitingConfirmationBookings = filteredBookings.filter(booking => booking.bookingStatus === "AWAITING_CONFIRMATION");
-  const availableFlights = filteredBookings.filter(booking => booking.bookingStatus === "AVAILABLE");
-  const confirmedBookings = filteredBookings.filter(booking => booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "COMPLETED");
-
-  const renderBookingGrid = (items: BookingDetails[], showNames: boolean = true) => (
+  const renderBookingGrid = () => (
     <>
-      <Grid items={items.slice(0, visibleBookings)} className="flex-shrink-0">
+      <Grid items={filteredBookings.slice(0, visibleBookings)} className="flex-shrink-0">
         <GridColumn path="bookingNumber" header="#" autoWidth/>
-        {showNames && (
-          <>
-            <GridColumn path="firstName" autoWidth/>
-            <GridColumn path="lastName" autoWidth/>
-          </>
-        )}
-        <GridColumn path="date" autoWidth/>
-        <GridColumn path="from" autoWidth/>
-        <GridColumn path="to" autoWidth/>
+        <GridColumn path="firstName" header="First Name" autoWidth/>
+        <GridColumn path="lastName" header="Last Name" autoWidth/>
+        <GridColumn path="date" header="Date" autoWidth/>
+        <GridColumn path="from" header="From" autoWidth/>
+        <GridColumn path="to" header="To" autoWidth/>
         <GridColumn header="Status" autoWidth>
           {({ item }) => renderStatus(item)}
         </GridColumn>
-        <GridColumn path="bookingClass" autoWidth/>
+        <GridColumn path="bookingClass" header="Class" autoWidth/>
       </Grid>
-      {items.length > visibleBookings && (
+      {filteredBookings.length > visibleBookings && (
         <Button onClick={() => setVisibleBookings(prev => prev + 10)} theme="primary" className="mt-4">
           Load More
         </Button>
       )}
     </>
   );
+
+  const toggleClientManagement = () => {
+    setClientManagementOpen(!clientManagementOpen);
+  };
 
   if (isLoading) {
     return <div className="flex justify-center items-center h-full">Loading...</div>;
@@ -165,7 +163,7 @@ export default function Index() {
   return (
     <>
       <SplitLayout className="h-full">
-        <div className="flex flex-col gap-4 p-4 box-border h-full w-full md:w-1/4 bg-gray-100">
+        <div className="flex flex-col gap-4 p-4 box-border h-full w-full md:w-1/3 bg-gray-100">
           <h2 className="text-2xl font-bold text-blue-600">Funnair Chat Support</h2>
           <MessageList messages={messages} className="flex-grow overflow-auto bg-white rounded-lg shadow-md p-4"/>
           <div className="relative">
@@ -181,45 +179,41 @@ export default function Index() {
             )}
           </div>
         </div>
-        <div className="flex flex-col gap-6 p-6 box-border overflow-auto w-full md:w-3/4 bg-gray-50">
+        <div className="flex flex-col gap-6 p-6 box-border overflow-auto w-full md:w-2/3 bg-gray-50">
           <div className="flex justify-between items-center">
             <h2 className="text-3xl font-bold text-blue-700">Flight Management Dashboard</h2>
             <Button
               theme="primary"
-              onClick={() => setClientManagementOpen(true)}
+              onClick={toggleClientManagement}
             >
               Client Management
             </Button>
           </div>
-          <TextField
-            placeholder="Search bookings..."
-            value={searchTerm}
-            onValueChanged={e => setSearchTerm(e.detail.value)}
-            className="mb-4"
-          />
+          <div className="flex gap-4 mb-4">
+            <TextField
+              placeholder="Search bookings..."
+              value={searchTerm}
+              onValueChanged={e => setSearchTerm(e.detail.value)}
+              className="flex-grow"
+            />
+            <ComboBox
+              label="Filter by Status"
+              items={["CONFIRMED", "COMPLETED", "CANCELLED", "AWAITING_CONFIRMATION", "AVAILABLE"]}
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              clearButtonVisible
+            />
+          </div>
           <section className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
-            <h3 className="text-xl font-semibold mb-3 text-blue-600">Bookings Awaiting Confirmation</h3>
-            {renderBookingGrid(awaitingConfirmationBookings)}
+            <h3 className="text-xl font-semibold mb-3 text-blue-600">All Bookings</h3>
+            {renderBookingGrid()}
           </section>
-          <section className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
-            <h3 className="text-xl font-semibold mb-3 text-blue-600">Available Flight Options</h3>
-            {renderBookingGrid(availableFlights, false)}
-          </section>
-          <section className="bg-white rounded-lg shadow-md p-4 hover:shadow-lg transition-shadow duration-300">
-            <CustomButton onClick={() => setShowConfirmed(!showConfirmed)} className="mb-3">
-              {showConfirmed ? 'Hide' : 'Show'} Confirmed Bookings ({confirmedBookings.length})
-            </CustomButton>
-            {showConfirmed && (
-              confirmedBookings.length > 0 
-                ? renderBookingGrid(confirmedBookings)
-                : <p className="text-gray-600 italic">No confirmed bookings available at this time.</p>
-            )}
-          </section>
+          <FlightStatusWidget />
         </div>
       </SplitLayout>
       <ClientManagementModal
         open={clientManagementOpen}
-        onClose={() => setClientManagementOpen(false)}
+        onClose={toggleClientManagement}
       />
       {errorNotification && (
         <Notification
