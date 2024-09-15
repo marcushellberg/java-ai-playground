@@ -27,7 +27,8 @@
       "@vaadin/flow-frontend": ["generated/jar-resources"],
       "@vaadin/flow-frontend/*": ["generated/jar-resources/*"],
       "Frontend/*": ["*"]
-    }
+    },
+    "typeRoots": ["./node_modules/@types", "./src/main/frontend/types"]
   },
   "include": [
     "src/main/frontend/**/*",

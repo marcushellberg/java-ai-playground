@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { nanoid } from "nanoid";
+import { Tooltip } from "@vaadin/react-components/Tooltip.js";
 
 // Vaadin components
 import { 
@@ -17,11 +18,12 @@ import {
 // import { CircularProgress } from "@vaadin/react-components/CircularProgress.js";
 
 // Local imports
-import { AssistantService, BookingService } from "Frontend/generated/endpoints";
+import { AssistantService, BookingService } from "../generated/endpoints";
 import BookingDetails from "../generated/org/vaadin/marcus/service/BookingDetails";
 import Message, { MessageItem } from "../components/Message";
 import MessageList from "Frontend/components/MessageList";
 import CustomButton from "../components/CustomButton";
+import ClientManagementModal from "../components/ClientManagementModal";
 
 const statusIcons: { [key: string]: string } = {
   CONFIRMED: "✅",
@@ -45,6 +47,7 @@ export default function Index() {
   const [errorNotification, setErrorNotification] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [visibleBookings, setVisibleBookings] = useState(10);
+  const [clientManagementOpen, setClientManagementOpen] = useState(false);
 
   const filteredBookings = bookings.filter(booking => 
     (booking.bookingNumber?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
@@ -55,10 +58,33 @@ export default function Index() {
   useEffect(() => {
     setIsLoading(true);
     setError(null);
-    BookingService.getBookings()
-      .then(setBookings)
-      .catch(err => setError("Failed to load bookings. Please try again."))
-      .finally(() => setIsLoading(false));
+    // Generate mock data with 50 records
+    const mockBookings: BookingDetails[] = Array.from({ length: 50 }, (_, i) => {
+      const statuses = ["CONFIRMED", "COMPLETED", "CANCELLED", "AWAITING_CONFIRMATION", "AVAILABLE"];
+      const cities = ["New York", "London", "Paris", "Tokyo", "Sydney", "Los Angeles", "Chicago", "Berlin", "Moscow", "Beijing", "Dubai", "Rome", "Amsterdam", "Singapore", "Toronto"];
+      const classes = ["Economy", "Business", "First"];
+      const randomDate = () => {
+        const start = new Date(2024, 0, 1);
+        const end = new Date(2024, 11, 31);
+        return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString().split('T')[0];
+      };
+      const randomCity = () => cities[Math.floor(Math.random() * cities.length)];
+      return {
+        bookingNumber: `B${(i + 1).toString().padStart(3, '0')}`,
+        firstName: `FirstName${i + 1}`,
+        lastName: `LastName${i + 1}`,
+        date: randomDate(),
+        from: randomCity(),
+        to: randomCity(),
+        bookingStatus: statuses[Math.floor(Math.random() * statuses.length)],
+        bookingClass: classes[Math.floor(Math.random() * classes.length)]
+      };
+    });
+    
+    setTimeout(() => {
+      setBookings(mockBookings);
+      setIsLoading(false);
+    }, 1000); // Simulate network delay
   }, []);
 
   const addMessage = (message: MessageItem) => {
@@ -78,7 +104,7 @@ export default function Index() {
     addMessage({ role: 'user', content: message });
     let first = true;
     AssistantService.chat(chatId, message)
-      .onNext(token => {
+      .onNext((token: string) => {
         if (first && token) {
           addMessage({ role: 'assistant', content: token });
           first = false;
@@ -100,7 +126,7 @@ export default function Index() {
 
   const awaitingConfirmationBookings = filteredBookings.filter(booking => booking.bookingStatus === "AWAITING_CONFIRMATION");
   const availableFlights = filteredBookings.filter(booking => booking.bookingStatus === "AVAILABLE");
-  const confirmedBookings = filteredBookings.filter(booking => booking.bookingStatus === "CONFIRMED");
+  const confirmedBookings = filteredBookings.filter(booking => booking.bookingStatus === "CONFIRMED" || booking.bookingStatus === "COMPLETED");
 
   const renderBookingGrid = (items: BookingDetails[], showNames: boolean = true) => (
     <>
@@ -140,7 +166,7 @@ export default function Index() {
     <>
       <SplitLayout className="h-full">
         <div className="flex flex-col gap-4 p-4 box-border h-full w-full md:w-1/4 bg-gray-100">
-          <h2 className="text-2xl font-bold text-blue-600 border-b-2 border-blue-300 pb-2">Funnair Chat Support</h2>
+          <h2 className="text-2xl font-bold text-blue-600">Funnair Chat Support</h2>
           <MessageList messages={messages} className="flex-grow overflow-auto bg-white rounded-lg shadow-md p-4"/>
           <div className="relative">
             <MessageInput 
@@ -156,7 +182,15 @@ export default function Index() {
           </div>
         </div>
         <div className="flex flex-col gap-6 p-6 box-border overflow-auto w-full md:w-3/4 bg-gray-50">
-          <h2 className="text-3xl font-bold text-blue-700 border-b-2 border-blue-300 pb-2">Flight Management Dashboard</h2>
+          <div className="flex justify-between items-center">
+            <h2 className="text-3xl font-bold text-blue-700">Flight Management Dashboard</h2>
+            <Button
+              theme="primary"
+              onClick={() => setClientManagementOpen(true)}
+            >
+              Client Management
+            </Button>
+          </div>
           <TextField
             placeholder="Search bookings..."
             value={searchTerm}
@@ -183,6 +217,10 @@ export default function Index() {
           </section>
         </div>
       </SplitLayout>
+      <ClientManagementModal
+        open={clientManagementOpen}
+        onClose={() => setClientManagementOpen(false)}
+      />
       {errorNotification && (
         <Notification
           theme="error"

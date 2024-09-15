@@ -8,6 +8,7 @@ This app demonstrates an advanced AI-powered customer support system for Funnair
 
 - **AI-Powered Chat Interface**: Intelligent conversational agent for customer support
 - **Comprehensive Booking Management**: Tools for tracking, updating, and managing booking statuses
+- **Client Management Dashboard**: Advanced tools for managing client profiles, preferences, and interactions
 - **In-Memory Chat History**: Maintains chat context within a session for coherent interactions
 - **Booking Confirmation Workflow**: Guides users through a streamlined booking confirmation process
 - **Retrieval Augmented Generation (RAG)**: Accesses relevant information like terms and conditions
@@ -15,6 +16,7 @@ This app demonstrates an advanced AI-powered customer support system for Funnair
 - **Dynamic Booking Status Updates**: Real-time updates of booking statuses with color-coded indicators
 - **Searchable Booking Grid**: Easily find and manage bookings with a powerful search feature
 - **Booking Status Counts**: Quick overview of bookings in different statuses
+- **Client Segmentation**: Ability to segment clients based on various criteria for targeted promotions
 
 ## Tech Stack
 
@@ -47,13 +49,13 @@ This app demonstrates an advanced AI-powered customer support system for Funnair
 
 ## Recent Enhancements
 
-- Implemented a tabbed interface for viewing bookings by status
-- Added a search functionality to quickly find specific bookings
-- Introduced color-coded status indicators for easy visual identification
-- Displayed booking status counts for at-a-glance information
-- Enhanced AI tools for detailed booking information retrieval and management
-- Extended `LangChain4jAssistant` for more sophisticated multi-turn conversations
-- Updated `LangChain4jTools` with advanced booking management capabilities
+- Implemented a comprehensive Client Management Dashboard for travel agents
+- Added functionality to create, update, and delete client profiles
+- Introduced client preference storage and automatic application during bookings
+- Implemented booking history tracking and filtering capabilities
+- Added client interaction logging for improved communication context
+- Introduced client segmentation features for targeted marketing
+- Enhanced data security with role-based access control for client information
 
 ## Roadmap
 
@@ -61,6 +63,9 @@ This app demonstrates an advanced AI-powered customer support system for Funnair
 - Enhance error handling and edge case management in AI interactions
 - Develop an advanced memory management system for extended context retention
 - Introduce data visualization for booking trends and analytics
+- Client Management: Enable the chatbot to manage client profiles, including preferences, frequent flyer information, and past bookings for personalized service
+- Multi-Booking Management: Allow handling of multiple bookings simultaneously, including group bookings, with real-time status tracking
+- Bulk Email/SMS Notifications: Implement a feature for sending bulk notifications to clients regarding booking confirmations, itinerary changes, or special offers
 
 ## Contributing
 

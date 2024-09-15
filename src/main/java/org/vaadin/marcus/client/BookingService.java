@@ -31,7 +31,7 @@ public class BookingService {
 
     public List<BookingDetails> getConfirmedBookings() {
         return flightService.getBookings().stream()
-                .filter(booking -> booking.bookingStatus().equals( BookingStatus.CONFIRMED))
+                .filter(booking -> booking.getBookingStatus().equals(BookingStatus.CONFIRMED))
                 .collect(Collectors.toList());
     }
 }
