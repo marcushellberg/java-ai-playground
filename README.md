@@ -69,3 +69,10 @@ We welcome contributions! Please feel free to submit Pull Requests or open Issue
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## AI-Assisted Development
+
+This application was developed with the assistance of AI technologies. Specifically:
+
+- LangChain4j was used for integrating large language models and AI services.
+- AI-powered tools were utilized during the development process to enhance productivity and code quality.
