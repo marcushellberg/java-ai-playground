@@ -1,6 +1,6 @@
-# Funnair AI-Powered Customer Support
+# Funnair AI-Powered Customer Support (Fork)
 
-![Funnair AI Customer Support Interface](screenshot.png)
+<img width="1723" alt="image" src="https://github.com/user-attachments/assets/d57cd1b8-6295-4a8e-aebb-90ce9b7c8578">
 
 This app demonstrates an advanced AI-powered customer support system for Funnair, a fictional airline. It showcases intelligent AI integration for handling customer inquiries and managing bookings efficiently.
 
