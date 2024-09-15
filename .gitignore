@@ -12,6 +12,10 @@ frontend/generated/
 .npmrc
 vite.generated.ts
 
+# Hide application.properties
+application.properties
+src/main/resources/application.properties
+
 # Eclipse and STS
 .apt_generated
 .classpath
