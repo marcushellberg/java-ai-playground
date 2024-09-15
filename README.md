@@ -1,80 +1,71 @@
-# Funnair AI-Powered Customer Support (Enhanced Fork)
+# Funnair AI-Powered Customer Support
 
-![A browser window with a chatbot and a data grid displaying flight booking details](screenshot.jpg)
+![Funnair AI Customer Support Interface](screenshot.png)
 
-This app demonstrates an enhanced AI-powered customer support system for Funnair, a fictional airline. It builds upon the original project with additional features and improvements.
+This app demonstrates an advanced AI-powered customer support system for Funnair, a fictional airline. It showcases intelligent AI integration for handling customer inquiries and managing bookings efficiently.
 
-## Key Enhancements
+## Key Features
 
-- **Booking Status Management**: Added functionality to track and update booking statuses.
-- **In-Memory Chat History**: Implemented a system to maintain chat context within a session.
-- **Booking Confirmation Flow**: Expanded the AI's ability to guide users through the booking confirmation process.
-
-## Core Features
-
-- Retrieval Augmented Generation (RAG) for accessing terms and conditions
-- Tool use (Java methods) for performing actions
-- LLM-based user interactions with improved context awareness
-
-## AI Capabilities
-
-- AI-powered chat interface with persistent context
-- Enhanced flight booking management system
-- Intelligent booking status updates and confirmations
+- **AI-Powered Chat Interface**: Intelligent conversational agent for customer support
+- **Comprehensive Booking Management**: Tools for tracking, updating, and managing booking statuses
+- **In-Memory Chat History**: Maintains chat context within a session for coherent interactions
+- **Booking Confirmation Workflow**: Guides users through a streamlined booking confirmation process
+- **Retrieval Augmented Generation (RAG)**: Accesses relevant information like terms and conditions
+- **Integrated Tool Usage**: Utilizes Java methods to perform actions based on user requests
+- **Dynamic Booking Status Updates**: Real-time updates of booking statuses with color-coded indicators
+- **Searchable Booking Grid**: Easily find and manage bookings with a powerful search feature
+- **Booking Status Counts**: Quick overview of bookings in different statuses
 
 ## Tech Stack
 
 - Backend: Spring Boot
-- Frontend: [Vaadin Hilla](https://vaadin.com)
-- AI Integration: [LangChain4j](https://github.com/langchain4j/langchain4j)
+- Frontend: Vaadin Hilla
+- AI Integration: LangChain4j
 
 ## Requirements
 
 - Java 21+
-- OpenAI API key (set in `OPENAI_API_KEY` environment variable)
+- OpenAI API key
 
-## Running the Application
+## Setup and Running
 
-1. Clone this forked repository
+1. Clone the repository
 2. Set the `OPENAI_API_KEY` environment variable
-3. Run `Application.java` in your IDE or execute `mvn` in the command line
+3. Run the application:
+   - IDE: Execute `Application.java`
+   - Command line: Run `mvn`
+4. Access the app at `http://localhost:8080`
 
-## Recent Updates
+## Usage Guide
 
-### Enhanced Booking Management
+1. **Chat Interface**: Interact with the AI assistant for flight information, bookings, or general inquiries.
+2. **Booking Management**: 
+   - Use the tabbed interface to view different booking statuses (All, Confirmed, Pending, Cancelled)
+   - Search for specific bookings using the search bar
+   - Check booking status counts at the top of the grid for a quick overview
+3. **AI-Assisted Actions**: The AI can help with tasks like retrieving booking details, updating statuses, and confirming reservations.
 
-- Added tabbed interface for different booking statuses
-- Implemented search functionality for bookings
-- Displayed booking status counts for quick overview
-- Improved AI tools for more detailed booking information retrieval
+## Recent Enhancements
 
-### LangChain4j Integration Improvements
+- Implemented a tabbed interface for viewing bookings by status
+- Added a search functionality to quickly find specific bookings
+- Introduced color-coded status indicators for easy visual identification
+- Displayed booking status counts for at-a-glance information
+- Enhanced AI tools for detailed booking information retrieval and management
+- Extended `LangChain4jAssistant` for more sophisticated multi-turn conversations
+- Updated `LangChain4jTools` with advanced booking management capabilities
 
-- Extended `LangChain4jAssistant` to handle multi-turn conversations
-- Updated `LangChain4jTools` with new booking management features
-- Added tools for retrieving booking summaries and detailed information
+## Roadmap
 
-## Next Steps
-
-- Implement more sophisticated booking management workflows
-- Enhance error handling and edge case scenarios in the AI interactions
-- Develop a more robust memory management system for long-term context retention
+- Implement more complex booking management workflows
+- Enhance error handling and edge case management in AI interactions
+- Develop an advanced memory management system for extended context retention
+- Introduce data visualization for booking trends and analytics
 
 ## Contributing
 
-Contributions to this enhanced fork are welcome! Please feel free to submit a Pull Request.
-
-## Acknowledgements
-
-This project is a fork of the original demo inspired by the [LangChain4j Customer Support Agent example](https://github.com/langchain4j/langchain4j-examples/tree/main/spring-boot-example/src/main/java/dev/langchain4j/example).
-
-We extend our gratitude to the original creators and contributors:
-- The LangChain4j team for the initial implementation
-- [@tzolov](https://github.com/tzolov) from the Spring AI team
-- [@sohamda](https://github.com/sohamda) from Microsoft for the Semantic Kernel implementation
-
-While we have significantly enhanced and modified the original project, their foundational work was invaluable.
+We welcome contributions! Please feel free to submit Pull Requests or open Issues for suggestions and bug reports.
 
 ## License
 
-[MIT License](LICENSE)
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
