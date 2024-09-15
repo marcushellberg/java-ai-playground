@@ -156,4 +156,12 @@ public class FlightService {
         int number = random.nextInt(1000, 9999);
         return airline + number;
     }
+
+    //get a list of confirmed bookings
+    public List<BookingDetails> getConfirmedBookings() {
+        return db.getBookings().stream()
+                .filter(b -> b.getBookingStatus() == BookingStatus.CONFIRMED)
+                .map(this::toBookingDetails)
+                .toList();
+    }
 }

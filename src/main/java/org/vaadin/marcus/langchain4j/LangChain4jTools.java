@@ -64,4 +64,12 @@ public class LangChain4jTools {
     public void confirmBooking(String bookingNumber, String firstName, String lastName) {
         service.confirmBooking(bookingNumber, firstName, lastName);
     }
+
+    //get a list of confirmed bookings
+    @Tool("""
+        Retrieves a list of confirmed bookings.
+        """)
+    public List<BookingDetails> getConfirmedBookings() {
+        return service.getConfirmedBookings();
+    }
 }
