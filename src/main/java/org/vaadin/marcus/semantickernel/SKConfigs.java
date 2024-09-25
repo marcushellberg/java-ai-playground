@@ -42,7 +42,6 @@ public class SKConfigs {
                 .withModelId(deploymentName)
                 .build();
     }
-
     @Bean
     public Kernel kernel(SKFunctions skFunctions) {
         KernelPlugin kernelPlugin = KernelPluginFactory.createFromObject(

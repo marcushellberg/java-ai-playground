@@ -4,6 +4,7 @@ import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.contextvariables.ContextVariableTypeConverter;
 import com.microsoft.semantickernel.contextvariables.ContextVariableTypes;
 import com.microsoft.semantickernel.orchestration.InvocationContext;
+import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
 import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
 import com.microsoft.semantickernel.services.ServiceNotFoundException;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
@@ -44,6 +45,7 @@ public class SKAssistant {
         // Allowing LLM to find and invoke the right function(s) required to perform a task
         this.invocationContext = InvocationContext.builder()
                 .withToolCallBehavior(ToolCallBehavior.allowAllKernelFunctions(true))
+                .withReturnMode(InvocationReturnMode.LAST_MESSAGE_ONLY)
                 .build();
         // Setting the type converter globally, so when a BookingDetails object encountered,
         // this can be used to convert the object to string and vice-versa
