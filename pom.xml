@@ -12,7 +12,8 @@
     <properties>
         <java.version>17</java.version>
         <vaadin.version>24.4.0.alpha23</vaadin.version>
-        <semantic-kernel.version>1.2.2</semantic-kernel.version>
+        <semantic-kernel.version>1.3.0</semantic-kernel.version>
+        <azure-json.version>1.3.0</azure-json.version>
     </properties>
 
     <parent>
@@ -91,6 +92,17 @@
             <groupId>com.microsoft.semantic-kernel</groupId>
             <artifactId>semantickernel-aiservices-openai</artifactId>
             <version>${semantic-kernel.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.microsoft.semantic-kernel</groupId>
+            <artifactId>semantickernel-experimental</artifactId>
+            <version>${semantic-kernel.version}</version>
+        </dependency>
+        <!-- additional dependency for response format changes (possibly a bug, already reported) -->
+        <dependency>
+            <groupId>com.azure</groupId>
+            <artifactId>azure-json</artifactId>
+            <version>${azure-json.version}</version>
         </dependency>
         <!-- Semantic Kernel end -->
 

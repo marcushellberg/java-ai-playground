@@ -7,6 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 import org.vaadin.marcus.service.BookingDetails;
 import org.vaadin.marcus.service.FlightService;
+import reactor.core.publisher.Mono;
+
+import java.util.List;
 
 @Component
 public class SKFunctions {
@@ -14,9 +17,11 @@ public class SKFunctions {
     Logger log = LoggerFactory.getLogger(SKFunctions.class);
 
     private final FlightService service;
+    private final SKContentRetriever contentRetriever;
 
-    public SKFunctions(FlightService service) {
+    public SKFunctions(FlightService service, SKContentRetriever contentRetriever) {
         this.service = service;
+        this.contentRetriever = contentRetriever;
     }
 
     /**
@@ -30,30 +35,13 @@ public class SKFunctions {
             name = "SearchFromQuestion",
             description = "find information related flight change, update, cancellation policies",
             returnType = "string")
-    public String searchInAnIndex(
+    public Mono<List<String>> searchInAnIndex(
             @KernelFunctionParameter(
                     description = "the query to answer",
                     name = "query")
             String query) {
         log.debug("invoked search for policies for query {}", query);
-        return """
-                These Terms of Service govern your experience with Funnair. By booking a flight, you agree to these terms.
-                                
-                1. Booking Flights
-                - Book via our website or mobile app.
-                - Full payment required at booking.
-                - Ensure accuracy of personal information (Name, ID, etc.) as corrections may incur a $25 fee.
-                                
-                2. Changing Bookings
-                - Changes allowed up to 24 hours before flight.
-                - Change via online or contact our support.
-                - Change fee: $50 for Economy, $30 for Premium Economy, Free for Business Class.
-                                
-                3. Cancelling Bookings
-                - Cancel up to 48 hours before flight.
-                - Cancellation fees: $75 for Economy, $50 for Premium Economy, $25 for Business Class.
-                - Refunds processed within 7 business days.                
-                """;
+        return contentRetriever.searchTermsAndConditions(query);
     }
 
     @DefineKernelFunction(
