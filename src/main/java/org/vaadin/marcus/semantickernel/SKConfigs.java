@@ -7,7 +7,11 @@ import com.azure.core.credential.KeyCredential;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
+import com.microsoft.semantickernel.aiservices.openai.textembedding.OpenAITextEmbeddingGenerationService;
 import com.microsoft.semantickernel.contextvariables.ContextVariableTypeConverter;
+import com.microsoft.semantickernel.data.VolatileVectorStore;
+import com.microsoft.semantickernel.data.VolatileVectorStoreRecordCollectionOptions;
+import com.microsoft.semantickernel.data.vectorstorage.VectorStoreRecordCollection;
 import com.microsoft.semantickernel.plugin.KernelPlugin;
 import com.microsoft.semantickernel.plugin.KernelPluginFactory;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
@@ -15,6 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
+import org.vaadin.marcus.semantickernel.search.TermsAndConditions;
 import org.vaadin.marcus.service.BookingDetails;
 
 @Configuration
@@ -23,6 +28,8 @@ public class SKConfigs {
     @Value("${sk.openai.key}") String apiKey;
     @Value("${sk.azure.openai.endpoint}") String endpoint;
     @Value("${sk.deployment.name}") String deploymentName;
+    @Value("${sk.azure.openai.embedding.model}") String embeddingModel;
+    @Value("${sk.azure.openai.embedding.dimension}") String embeddingDimension;
 
     private OpenAIAsyncClient openAIAsyncClient() {
         if(StringUtils.hasLength(endpoint)) {
@@ -53,6 +60,28 @@ public class SKConfigs {
                 .withAIService(ChatCompletionService.class, chatCompletionService())
                 .withPlugin(kernelPlugin)
                 .build();
+    }
+
+    @Bean
+    public OpenAITextEmbeddingGenerationService embeddingGenerationService() {
+        return OpenAITextEmbeddingGenerationService.builder()
+                .withOpenAIAsyncClient(openAIAsyncClient())
+                .withDeploymentName(embeddingModel)
+                .withModelId(embeddingModel)
+                .withDimensions(Integer.parseInt(embeddingDimension))
+                .build();
+    }
+
+    @Bean
+    public VectorStoreRecordCollection<String, TermsAndConditions> inMemoryVectorStore() {
+        VolatileVectorStore volatileVectorStore = new VolatileVectorStore();
+
+        String collectionName = "terms-and-conditions";
+        VectorStoreRecordCollection<String, TermsAndConditions> collection = volatileVectorStore.getCollection(collectionName,
+                VolatileVectorStoreRecordCollectionOptions.<TermsAndConditions>builder()
+                        .withRecordClass(TermsAndConditions.class)
+                        .build());
+        return collection;
     }
 
     @Bean
