@@ -1,4 +1,4 @@
-package org.vaadin.marcus.search;
+package org.vaadin.marcus.semantickernel.search;
 
 import com.microsoft.semantickernel.aiservices.openai.textembedding.OpenAITextEmbeddingGenerationService;
 import com.microsoft.semantickernel.data.vectorstorage.VectorStoreRecordCollection;

@@ -1,4 +1,4 @@
-package org.vaadin.marcus.search;
+package org.vaadin.marcus.semantickernel.search;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.microsoft.semantickernel.data.vectorstorage.attributes.VectorStoreRecordDataAttribute;

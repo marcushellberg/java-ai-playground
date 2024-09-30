@@ -1,4 +1,4 @@
-package org.vaadin.marcus.semantickernel;
+package org.vaadin.marcus.semantickernel.search;
 
 import com.microsoft.semantickernel.aiservices.openai.textembedding.OpenAITextEmbeddingGenerationService;
 import com.microsoft.semantickernel.data.vectorsearch.VectorSearchResult;
@@ -6,7 +6,6 @@ import com.microsoft.semantickernel.data.vectorstorage.VectorStoreRecordCollecti
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-import org.vaadin.marcus.search.TermsAndConditions;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 

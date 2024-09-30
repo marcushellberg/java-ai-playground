@@ -5,6 +5,7 @@ import com.microsoft.semantickernel.semanticfunctions.annotations.KernelFunction
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.vaadin.marcus.semantickernel.search.SKContentRetriever;
 import org.vaadin.marcus.service.BookingDetails;
 import org.vaadin.marcus.service.FlightService;
 import reactor.core.publisher.Mono;
@@ -24,13 +25,6 @@ public class SKFunctions {
         this.contentRetriever = contentRetriever;
     }
 
-    /**
-     * Ideally this information should come from a vector db or a knowledge mine,
-     * But SK doesn't have a In_memory option so temporarily implemented as below
-     *
-     * @param query
-     * @return
-     */
     @DefineKernelFunction(
             name = "SearchFromQuestion",
             description = "find information related flight change, update, cancellation policies",

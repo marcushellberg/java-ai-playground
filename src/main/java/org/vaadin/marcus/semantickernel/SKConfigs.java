@@ -19,7 +19,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
-import org.vaadin.marcus.search.TermsAndConditions;
+import org.vaadin.marcus.semantickernel.search.TermsAndConditions;
 import org.vaadin.marcus.service.BookingDetails;
 
 @Configuration
