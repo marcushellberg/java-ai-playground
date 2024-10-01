@@ -9,21 +9,25 @@ import com.microsoft.semantickernel.data.vectorstorage.definition.DistanceFuncti
 import java.util.Collections;
 import java.util.List;
 
-public class TermsAndConditions {
+public class Document {
 
     @VectorStoreRecordKeyAttribute
     private String id;
     @VectorStoreRecordDataAttribute
     private String content;
-    @VectorStoreRecordVectorAttribute(dimensions = 1536, indexKind = "Hnsw", distanceFunction = DistanceFunction.COSINE_DISTANCE)
+    @VectorStoreRecordVectorAttribute(
+            dimensions = 1536,
+            indexKind = "Hnsw", // Hierarchical Navigable Small World, which performs an approximate nearest neighbour (ANN) search
+            distanceFunction = DistanceFunction.COSINE_DISTANCE
+    )
     private List<Float> contentVector;
 
-    public TermsAndConditions() {
+    public Document() {
         this(null, null, Collections.emptyList());
     }
 
-    public TermsAndConditions(@JsonProperty String id, @JsonProperty String content,
-                  @JsonProperty List<Float> contentVector) {
+    public Document(@JsonProperty String id, @JsonProperty String content,
+                    @JsonProperty List<Float> contentVector) {
         this.content = content;
         this.id = id;
         this.contentVector = contentVector;

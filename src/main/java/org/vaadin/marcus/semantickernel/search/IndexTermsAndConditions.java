@@ -25,9 +25,9 @@ public class IndexTermsAndConditions implements ApplicationListener<ContextRefre
     Resource resourceFile;
 
     private final OpenAITextEmbeddingGenerationService embeddingGenerationService;
-    private final VectorStoreRecordCollection<String, TermsAndConditions> inMemoryVectorStore;
+    private final VectorStoreRecordCollection<String, Document> inMemoryVectorStore;
 
-    public IndexTermsAndConditions(OpenAITextEmbeddingGenerationService embeddingGenerationService, VectorStoreRecordCollection<String, TermsAndConditions> inMemoryVectorStore) {
+    public IndexTermsAndConditions(OpenAITextEmbeddingGenerationService embeddingGenerationService, VectorStoreRecordCollection<String, Document> inMemoryVectorStore) {
         this.embeddingGenerationService = embeddingGenerationService;
         this.inMemoryVectorStore = inMemoryVectorStore;
     }
@@ -52,19 +52,19 @@ public class IndexTermsAndConditions implements ApplicationListener<ContextRefre
         }
     }
 
-    private Mono<List<String>> storeData(VectorStoreRecordCollection<String, TermsAndConditions> collection,
+    private Mono<List<String>> storeData(VectorStoreRecordCollection<String, Document> collection,
                                          OpenAITextEmbeddingGenerationService embeddingGenerationService,
                                          String termsAndConditions) {
-        return Flux.fromIterable(chunkData(termsAndConditions).entrySet())
+        return Flux.fromIterable(chunkData(termsAndConditions))
                 .flatMap(entry -> {
-                    log.debug("Saving to memory> ' {}: {}", entry.getKey(), entry.getValue());
+                    log.debug("Saving to memory> ' {}", entry);
 
                     return embeddingGenerationService
-                            .generateEmbeddingsAsync(Collections.singletonList(entry.getValue()))
+                            .generateEmbeddingsAsync(Collections.singletonList(entry))
                             .flatMap(embeddings -> {
-                                TermsAndConditions termsCond = new TermsAndConditions(
-                                        entry.getKey(),
-                                        entry.getValue(),
+                                var termsCond = new Document(
+                                        UUID.randomUUID().toString(),
+                                        entry,
                                         embeddings.get(0).getVector());
                                 return collection.upsertAsync(termsCond, null);
                             });
@@ -72,18 +72,8 @@ public class IndexTermsAndConditions implements ApplicationListener<ContextRefre
                 .collectList();
     }
 
-    private Map<String, String> chunkData(String termsAndConditions) {
-        int chunkSize = 250;
-        int overlapSize = 100;
-
-        Map<String, String> chunks = new HashMap<>();
-        int length = termsAndConditions.length();
-
-        for (int i = 0; i < length; i += (chunkSize - overlapSize)) {
-            int end = Math.min(length, i + chunkSize);
-            chunks.put(String.valueOf(i), termsAndConditions.substring(i, end));
-        }
-
-        return chunks;
+    // Split the document into chunks by paragraphs (empty lines)
+    private List<String> chunkData(String doc) {
+        return List.of(doc.split("\\R\\s*\\R+"));
     }
 }

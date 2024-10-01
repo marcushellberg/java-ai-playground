@@ -4,6 +4,7 @@ import com.azure.ai.openai.OpenAIAsyncClient;
 import com.azure.ai.openai.OpenAIClientBuilder;
 import com.azure.core.credential.AzureKeyCredential;
 import com.azure.core.credential.KeyCredential;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.microsoft.semantickernel.Kernel;
 import com.microsoft.semantickernel.aiservices.openai.chatcompletion.OpenAIChatCompletion;
@@ -19,20 +20,27 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.util.StringUtils;
-import org.vaadin.marcus.semantickernel.search.TermsAndConditions;
+import org.vaadin.marcus.semantickernel.search.Document;
 import org.vaadin.marcus.service.BookingDetails;
+
+import static org.reflections.Reflections.log;
 
 @Configuration
 public class SKConfigs {
 
-    @Value("${sk.openai.key}") String apiKey;
-    @Value("${sk.azure.openai.endpoint}") String endpoint;
-    @Value("${sk.deployment.name}") String deploymentName;
-    @Value("${sk.azure.openai.embedding.model}") String embeddingModel;
-    @Value("${sk.azure.openai.embedding.dimension}") String embeddingDimension;
+    @Value("${sk.openai.key}")
+    String apiKey;
+    @Value("${sk.azure.openai.endpoint}")
+    String endpoint;
+    @Value("${sk.deployment.name}")
+    String deploymentName;
+    @Value("${sk.azure.openai.embedding.model}")
+    String embeddingModel;
+    @Value("${sk.azure.openai.embedding.dimension}")
+    String embeddingDimension;
 
     private OpenAIAsyncClient openAIAsyncClient() {
-        if(StringUtils.hasLength(endpoint)) {
+        if (StringUtils.hasLength(endpoint)) {
             return new OpenAIClientBuilder()
                     .endpoint(endpoint)
                     .credential(new AzureKeyCredential(apiKey))
@@ -73,15 +81,15 @@ public class SKConfigs {
     }
 
     @Bean
-    public VectorStoreRecordCollection<String, TermsAndConditions> inMemoryVectorStore() {
+    public VectorStoreRecordCollection<String, Document> inMemoryVectorStore() {
         VolatileVectorStore volatileVectorStore = new VolatileVectorStore();
 
-        String collectionName = "terms-and-conditions";
-        VectorStoreRecordCollection<String, TermsAndConditions> collection = volatileVectorStore.getCollection(collectionName,
-                VolatileVectorStoreRecordCollectionOptions.<TermsAndConditions>builder()
-                        .withRecordClass(TermsAndConditions.class)
+        var collectionName = "terms-and-conditions";
+
+        return volatileVectorStore.getCollection(collectionName,
+                VolatileVectorStoreRecordCollectionOptions.<Document>builder()
+                        .withRecordClass(Document.class)
                         .build());
-        return collection;
     }
 
     @Bean
@@ -89,29 +97,23 @@ public class SKConfigs {
         return new ContextVariableTypeConverter<>(
                 BookingDetails.class,
                 objectToObject -> (BookingDetails) objectToObject,
-                Record::toString,
-                    // THE IDEAL implementation would be proper deserializable type, example to JSON below
-                    /*
-                    {
-                        try {
-                            String json = objectMapper.writeValueAsString(o);
-                            log.debug("converting from object to json {}", json);
-                            return json;
-                        } catch (JsonProcessingException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }*/
-                stringToObject -> null
-                // THE IDEAL implementation would be proper serialization, example from JSON below
-                /*
-                {
+                o -> {
+                    try {
+                        String json = objectMapper.writeValueAsString(o);
+                        log.debug("converting from object to json {}", json);
+                        return json;
+                    } catch (JsonProcessingException e) {
+                        throw new RuntimeException(e);
+                    }
+                },
+                s -> {
                     try {
                         log.debug("converting from json to object {}", s);
                         return objectMapper.readValue(s, BookingDetails.class);
                     } catch (JsonProcessingException e) {
                         throw new RuntimeException(e);
                     }
-                }*/
+                }
         );
     }
 }

@@ -18,22 +18,23 @@ public class SKContentRetriever {
     Logger log = LoggerFactory.getLogger(SKContentRetriever.class);
 
     private final OpenAITextEmbeddingGenerationService embeddingGenerationService;
-    private final VectorStoreRecordCollection<String, TermsAndConditions> inMemoryVectorStore;
+    private final VectorStoreRecordCollection<String, Document> inMemoryVectorStore;
 
-    public SKContentRetriever(OpenAITextEmbeddingGenerationService embeddingGenerationService, VectorStoreRecordCollection<String, TermsAndConditions> inMemoryVectorStore) {
+    public SKContentRetriever(OpenAITextEmbeddingGenerationService embeddingGenerationService, VectorStoreRecordCollection<String, Document> inMemoryVectorStore) {
         this.embeddingGenerationService = embeddingGenerationService;
         this.inMemoryVectorStore = inMemoryVectorStore;
     }
 
     public Mono<List<String>> searchTermsAndConditions(String query) {
         log.debug("invoked search for policies for query {}", query);
-        Mono<List<VectorSearchResult<TermsAndConditions>>> searchResults =
+
+        var searchResults =
                 embeddingGenerationService.generateEmbeddingsAsync(Collections.singletonList(query))
                 .flatMap(r -> inMemoryVectorStore.searchAsync(r.get(0).getVector(), null));
 
         return searchResults.flatMapMany(Flux::fromIterable)
                 .map(VectorSearchResult::getRecord)
-                .map(TermsAndConditions::getContent)
+                .map(Document::getContent)
                 .collectList();
     }
 }

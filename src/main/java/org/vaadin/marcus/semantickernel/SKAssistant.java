@@ -8,20 +8,15 @@ import com.microsoft.semantickernel.orchestration.InvocationReturnMode;
 import com.microsoft.semantickernel.orchestration.ToolCallBehavior;
 import com.microsoft.semantickernel.services.ServiceNotFoundException;
 import com.microsoft.semantickernel.services.chatcompletion.ChatCompletionService;
-import com.microsoft.semantickernel.services.chatcompletion.ChatMessageContent;
-import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.vaadin.marcus.service.BookingDetails;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SKAssistant {
@@ -37,10 +32,6 @@ public class SKAssistant {
     public SKAssistant(Kernel kernel, ContextVariableTypeConverter<BookingDetails> bookingDetailsTypeConverter) {
         this.kernel = kernel;
         this.bookingDetailsTypeConverter = bookingDetailsTypeConverter;
-    }
-
-    @PostConstruct
-    public void updateGlobalTypeConverter() {
         this.chatsInMemory = new HashMap<>();
         // Allowing LLM to find and invoke the right function(s) required to perform a task
         this.invocationContext = InvocationContext.builder()
@@ -55,12 +46,11 @@ public class SKAssistant {
     public Flux<String> chat(String chatId, String userMessage) throws ServiceNotFoundException {
         log.debug("chatid {} and usermsg {}", chatId, userMessage);
 
-        SKChatManager chatManager = getChatManager(chatId, userMessage);
-
-        ChatCompletionService chatCompletionService = this.kernel.getService(ChatCompletionService.class);
-
-        Mono<List<ChatMessageContent<?>>> chatMessageContentsAsync = chatCompletionService
+        var chatManager = getChatManager(chatId, userMessage);
+        var chatCompletionService = this.kernel.getService(ChatCompletionService.class);
+        var chatMessageContentsAsync = chatCompletionService
                 .getChatMessageContentsAsync(chatManager.getChatHistory(), this.kernel, this.invocationContext);
+
         return chatMessageContentsAsync.flatMapIterable(list ->
                 list.stream().map(content -> {
                     String response = content.getContent();
@@ -75,7 +65,7 @@ public class SKAssistant {
             this.chatsInMemory.put(chatId, chatManager);
         }
 
-        SKChatManager chatManager = this.chatsInMemory.get(chatId);
+        var chatManager = this.chatsInMemory.get(chatId);
         chatManager.getChatHistory().addUserMessage(userMessage);
         return chatManager;
     }
