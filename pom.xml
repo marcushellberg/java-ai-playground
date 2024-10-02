@@ -11,7 +11,7 @@
 
     <properties>
         <java.version>17</java.version>
-        <vaadin.version>24.4.0.alpha23</vaadin.version>
+        <vaadin.version>24.4.13</vaadin.version>
         <semantic-kernel.version>1.3.0</semantic-kernel.version>
         <azure-json.version>1.3.0</azure-json.version>
         <reactor-test.version>3.6.5</reactor-test.version>
