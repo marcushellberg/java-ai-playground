@@ -23,15 +23,14 @@ import java.util.function.Function;
 @Configuration
 public class AssistantService {
 
-    public record SeatChangeRequest(String requestId) {}
+    public record SeatChangeRequest(String requestId) {
+    }
 
     private final ConcurrentHashMap<String, CompletableFuture<String>> pendingRequests = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<String, Sinks.Many<SeatChangeRequest>> seatChangeRequests = new ConcurrentHashMap<>();
 
     private final SpringAiAssistant springAiAssistant;
     private final FlightService flightBookingService;
-
-    // TODO: each chatId should have its own sink
-    private final Sinks.Many<SeatChangeRequest> seatRequests = Sinks.many().multicast().onBackpressureBuffer();
 
     public AssistantService(SpringAiAssistant springAiAssistant, FlightService flightBookingService) {
         this.springAiAssistant = springAiAssistant;
@@ -42,8 +41,11 @@ public class AssistantService {
         return springAiAssistant.chat(chatId, userMessage);
     }
 
-    public Flux<SeatChangeRequest> seatChangeRequests() {
-        return seatRequests.asFlux();
+    public Flux<SeatChangeRequest> seatChangeRequests(String chatId) {
+        return seatChangeRequests.computeIfAbsent(
+                chatId,
+                id -> Sinks.many().unicast().onBackpressureBuffer()
+        ).asFlux();
     }
 
     public void completeSeatChangeRequest(String requestId, String seat) {
@@ -53,17 +55,23 @@ public class AssistantService {
         }
     }
 
-    public record LLMSeatChangeRequest(String bookingNumber, String firstName, String lastName) { }
+    public record LLMSeatChangeRequest(String bookingNumber, String firstName, String lastName) {
+    }
 
     @Bean
     @Description("Change seat")
     public Function<LLMSeatChangeRequest, String> changeSeat() {
         return request -> {
             System.out.println("Changing seat for " + request.bookingNumber() + " to a better one");
+
             var id = UUID.randomUUID().toString();
             CompletableFuture<String> future = new CompletableFuture<>();
             pendingRequests.put(id, future);
-            seatRequests.tryEmitNext(new SeatChangeRequest(id));
+
+            // FIXME: Only send the request to the correct chatId
+            // This function is called from the LLM, that does not know the internal chatId, how do we get it?
+            // Advisor context maybe?
+            seatChangeRequests.values().forEach(sink -> sink.tryEmitNext(new SeatChangeRequest(id)));
 
             // Wait for the seat selection to complete
             String seat;

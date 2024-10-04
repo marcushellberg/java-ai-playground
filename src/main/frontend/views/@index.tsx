@@ -23,7 +23,7 @@ export default function Index() {
   }]);
 
   useEffect(() => {
-    AssistantService.seatChangeRequests().onNext(request => {
+    AssistantService.seatChangeRequests(chatId).onNext(request => {
       setSeatSelectionRequestId(request.requestId);
       setSeatSelectionOpen(true);
     })
