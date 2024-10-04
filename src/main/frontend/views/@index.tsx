@@ -6,17 +6,28 @@ import {Grid} from "@vaadin/react-components/Grid";
 import {MessageInput} from "@vaadin/react-components/MessageInput";
 import {nanoid} from "nanoid";
 import {SplitLayout} from "@vaadin/react-components/SplitLayout";
-import Message, {MessageItem} from "../components/Message";
+import {MessageItem} from "../components/Message";
 import MessageList from "Frontend/components/MessageList";
+import {Dialog} from "@vaadin/react-components";
+import SeatSelection from "Frontend/components/SeatSelection";
 
 export default function Index() {
   const [chatId, setChatId] = useState(nanoid());
+  const [seatSelectionOpen, setSeatSelectionOpen] = useState(false);
+  const [seatSelectionRequestId, setSeatSelectionRequestId] = useState('');
   const [working, setWorking] = useState(false);
   const [bookings, setBookings] = useState<BookingDetails[]>([]);
   const [messages, setMessages] = useState<MessageItem[]>([{
     role: 'assistant',
     content: 'Welcome to Funnair! How can I help you?'
   }]);
+
+  useEffect(() => {
+    AssistantService.seatChangeRequests().onNext(request => {
+      setSeatSelectionRequestId(request.requestId);
+      setSeatSelectionOpen(true);
+    })
+  }, []);
 
   useEffect(() => {
     // Update bookings when we have received the full response
@@ -62,28 +73,39 @@ export default function Index() {
   }
 
   return (
-    <SplitLayout className="h-full">
-      <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
-        <h3>Funnair support</h3>
-        <MessageList messages={messages} className="flex-grow overflow-scroll"/>
-        <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0" disabled={working}/>
-      </div>
-      <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
-        <h3>Bookings database</h3>
-        <Grid items={bookings} className="flex-shrink-0">
-          <GridColumn path="bookingNumber" autoWidth header="#"/>
-          <GridColumn path="firstName" autoWidth/>
-          <GridColumn path="lastName" autoWidth/>
-          <GridColumn path="date" autoWidth/>
-          <GridColumn path="from" autoWidth/>
-          <GridColumn path="to" autoWidth/>
-          <GridColumn path="bookingStatus" autoWidth header="Status">
-            {({item}) => item.bookingStatus === "CONFIRMED" ? "✅" : "❌"}
-          </GridColumn>
-          <GridColumn path="bookingClass" autoWidth/>
-        </Grid>
-      </div>
-    </SplitLayout>
+    <>
+      <SplitLayout className="h-full">
+        <div className="flex flex-col gap-m p-m box-border h-full" style={{width: '30%'}}>
+          <h3>Funnair support</h3>
+          <MessageList messages={messages} className="flex-grow overflow-scroll"/>
+          <MessageInput onSubmit={e => sendMessage(e.detail.value)} className="px-0" disabled={working}/>
+        </div>
+        <div className="flex flex-col gap-m p-m box-border" style={{width: '70%'}}>
+          <h3>Bookings database</h3>
+          <Grid items={bookings} className="flex-shrink-0">
+            <GridColumn path="bookingNumber" autoWidth header="#"/>
+            <GridColumn path="firstName" autoWidth/>
+            <GridColumn path="lastName" autoWidth/>
+            <GridColumn path="date" autoWidth/>
+            <GridColumn path="from" autoWidth/>
+            <GridColumn path="to" autoWidth/>
+            <GridColumn path="seatNumber" autoWidth/>
+            <GridColumn path="bookingStatus" autoWidth header="Status">
+              {({item}) => item.bookingStatus === "CONFIRMED" ? "✅" : "❌"}
+            </GridColumn>
+            <GridColumn path="bookingClass" autoWidth/>
+          </Grid>
+        </div>
+      </SplitLayout>
 
+      <Dialog headerTitle="Select seat"
+              opened={seatSelectionOpen}>
+        <SeatSelection onSeatSelect={seatNumber => {
+          AssistantService.completeSeatChangeRequest(seatSelectionRequestId, seatNumber);
+          setSeatSelectionOpen(false);
+          setSeatSelectionRequestId('');
+        }}/>
+      </Dialog>
+    </>
   );
 }

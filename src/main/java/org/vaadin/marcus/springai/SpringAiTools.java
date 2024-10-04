@@ -72,7 +72,7 @@ public class SpringAiTools {
             catch (Exception e) {
                 logger.warn("Booking details: {}", NestedExceptionUtils.getMostSpecificCause(e).getMessage());
                 return new BookingDetails(request.bookingNumber(), request.firstName(), request.lastName,
-                        null, null, null, null, null);
+                        null, null, null, null, null, null);
             }
         };
     }

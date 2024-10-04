@@ -22,7 +22,7 @@ public class FlightService {
     private void initDemoData() {
         List<String> firstNames = List.of("John", "Jane", "Michael", "Sarah", "Robert");
         List<String> lastNames = List.of("Doe", "Smith", "Johnson", "Williams", "Taylor");
-        List<String> airportCodes = List.of("LAX", "SFO", "JFK", "LHR", "CDG", "ARN", "HEL", "TXL", "MUC", "FRA", "MAD", "SJC");
+        List<String> airportCodes = List.of("LAX", "SFO", "JFK", "LHR", "CDG", "ARN", "HEL", "BER", "MUC", "FRA", "MAD", "SJC");
         Random random = new Random();
 
         var customers = new ArrayList<Customer>();
@@ -33,14 +33,14 @@ public class FlightService {
             String lastName = lastNames.get(i);
             String from = airportCodes.get(random.nextInt(airportCodes.size()));
             String to = airportCodes.get(random.nextInt(airportCodes.size()));
+            String seatNumber = (random.nextInt(19)+ 1) + "A";
             BookingClass bookingClass = BookingClass.values()[random.nextInt(BookingClass.values().length)];
             Customer customer = new Customer();
             customer.setFirstName(firstName);
             customer.setLastName(lastName);
-
             LocalDate date = LocalDate.now().plusDays(2*i);
 
-            Booking booking = new Booking("10" + (i + 1), date, customer, BookingStatus.CONFIRMED, from, to, bookingClass);
+            Booking booking = new Booking("10" + (i + 1), date, customer, BookingStatus.CONFIRMED, from, to, seatNumber, bookingClass);
             customer.getBookings().add(booking);
 
             customers.add(customer);
@@ -99,7 +99,13 @@ public class FlightService {
                 booking.getBookingStatus(),
                 booking.getFrom(),
                 booking.getTo(),
+                booking.getSeatNumber(),
                 booking.getBookingClass().toString()
         );
+    }
+
+    public void changeSeat(String bookingNumber, String firstName, String lastName, String seatNumber) {
+        var booking = findBooking(bookingNumber, firstName, lastName);
+        booking.setSeatNumber(seatNumber);
     }
 }

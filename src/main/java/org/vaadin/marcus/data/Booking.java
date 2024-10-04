@@ -10,16 +10,18 @@ public class Booking {
     private Customer customer;
     private String from;
     private String to;
+    private String seatNumber;
     private BookingStatus bookingStatus;
     private BookingClass bookingClass;
 
-    public Booking(String bookingNumber, LocalDate date, Customer customer, BookingStatus bookingStatus, String from, String to, BookingClass bookingClass) {
+    public Booking(String bookingNumber, LocalDate date, Customer customer, BookingStatus bookingStatus, String from, String to, String seatNumber, BookingClass bookingClass) {
         this.bookingNumber = bookingNumber;
         this.date = date;
         this.customer = customer;
         this.bookingStatus = bookingStatus;
         this.from = from;
         this.to = to;
+        this.seatNumber = seatNumber;
         this.bookingClass = bookingClass;
     }
 
@@ -78,6 +80,14 @@ public class Booking {
 
     public void setTo(String to) {
         this.to = to;
+    }
+
+    public String getSeatNumber() {
+        return seatNumber;
+    }
+
+    public void setSeatNumber(String seatNumber) {
+        this.seatNumber = seatNumber;
     }
 
     public BookingClass getBookingClass() {

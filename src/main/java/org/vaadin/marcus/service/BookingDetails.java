@@ -11,5 +11,6 @@ public record BookingDetails(String bookingNumber,
                              BookingStatus bookingStatus,
                              String from,
                              String to,
+                             String seatNumber,
                              String bookingClass) {
 }

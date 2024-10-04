@@ -16,10 +16,6 @@
 
 package org.vaadin.marcus.springai;
 
-import java.time.LocalDate;
-
-import reactor.core.publisher.Flux;
-
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
@@ -27,6 +23,9 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.stereotype.Service;
+import reactor.core.publisher.Flux;
+
+import java.time.LocalDate;
 
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY;
 import static org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY;
@@ -59,7 +58,7 @@ public class SpringAiAssistant {
 				.defaultAdvisors(
 						new PromptChatMemoryAdvisor(chatMemory), // Chat Memory
 						new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults())) // RAG
-				.defaultFunctions("getBookingDetails", "changeBooking", "cancelBooking") // FUNCTION CALLING
+				.defaultFunctions("getBookingDetails", "changeBooking", "cancelBooking", "changeSeat") // FUNCTION CALLING
 
 				.build();
 		// @formatter:on
