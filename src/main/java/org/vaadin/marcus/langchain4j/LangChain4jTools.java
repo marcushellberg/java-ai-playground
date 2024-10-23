@@ -1,5 +1,6 @@
 package org.vaadin.marcus.langchain4j;
 
+import dev.langchain4j.agent.tool.P;
 import dev.langchain4j.agent.tool.Tool;
 import org.springframework.stereotype.Component;
 import org.vaadin.marcus.service.BookingDetails;
@@ -28,8 +29,14 @@ public class LangChain4jTools {
             Modifies an existing booking.
             This includes making changes to the flight date, and the departure and arrival airports.
             """)
-    public void changeBooking(String bookingNumber, String firstName, String lastName,
-                              LocalDate newFlightDate, String newDepartureAirport, String newArrivalAirport) {
+    public void changeBooking(
+        String bookingNumber,
+        String firstName,
+        String lastName,
+        LocalDate newFlightDate,
+        @P("3-letter code for departure airport") String newDepartureAirport,
+        @P("3-letter code for arrival airport") String newArrivalAirport
+    ) {
         service.changeBooking(bookingNumber, firstName, lastName, newFlightDate, newDepartureAirport, newArrivalAirport);
     }
 
