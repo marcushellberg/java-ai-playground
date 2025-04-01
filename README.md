@@ -16,7 +16,7 @@ The application includes implementations for:
 The UI is built using [Vaadin Hilla](https://vaadin.com) and the backend is built using Spring Boot.
 
 ## Requirements
-- Java 17+
+- Java 21+
 - OpenAI API key in `OPENAI_API_KEY` environment variable
 
 ## Running
